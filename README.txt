@@ -1,3 +1,2 @@
-Test Test
-1 2 3
-this a Test
+To run:
+    python3 game.py
