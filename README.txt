@@ -1,2 +1,5 @@
-To run:
-    python3 game.py
+:D Just trynna survive
+
+slowly dying but we got this yall
+
+LOL
