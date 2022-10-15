@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.sprite import Sprite, Group
 from vector import Vector
 from timer import Timer
+from node import
 
 # manages each individual ghost
 class Ghost(Sprite):
@@ -31,27 +32,25 @@ class Ghost(Sprite):
         self.hit = False # will control when the ghost is hit and changes to the secondary form
         self.timer_regular = Timer(self.type)
         self.mode = self.chase_dict[type]# decides which version (chase mode, scatter mode, or run mode)
+        self.position = Vector()
+
+    def move(self, game):
+        self.position.x += 1
+        self.position.y += 1
 
     def choose_node(self): pass
 
     def switch_scatter(self): pass # If pacman eats the candy, ghosts will change to scatter mode and run awway
 
-    def switch_chase(self):
+    def switch_chase(self): pass # If timer for the vulnerable form ends, it switches back to chasing
+    
+    def switch_run(self): pass # If 
 
+    def change_direction(self): pass
 
-# 
 class Ghosts:
     def __init__(self): pass
 
     def draw(self): pass
 
     def update(self): pass
-    # Switch to chasing PacMan
-    def switch_chase(self): pass
-    # Switch to scatter, running away
-    def switch_scatter(self): pass
-    # Switch to running key
-    def switch_run(self): pass
-
-    def switch_spawn(self): pass
-    def change_direction(self): pass
