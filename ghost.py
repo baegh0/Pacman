@@ -2,7 +2,6 @@ import pygame as pg
 from pygame.sprite import Sprite, Group
 from vector import Vector
 from timer import Timer
-from node import
 
 # manages each individual ghost
 class Ghost(Sprite):
@@ -30,8 +29,8 @@ class Ghost(Sprite):
         self.rect.y = self.rect.height
         self.type = type # will be the list of images that determine which ghost it is, make a dict with keys to determine which ghost it is
         self.hit = False # will control when the ghost is hit and changes to the secondary form
-        self.timer_regular = Timer(self.type)
         self.mode = self.chase_dict[type]# decides which version (chase mode, scatter mode, or run mode)
+        self.timer = Timer(self.mode)
         self.position = Vector()
 
     def move(self, game):
@@ -40,13 +39,25 @@ class Ghost(Sprite):
 
     def choose_node(self): pass
 
-    def switch_scatter(self): pass # If pacman eats the candy, ghosts will change to scatter mode and run awway
+    def switch_scatter(self): # If pacman eats the candy, ghosts will change to scatter mode and run awway
+        self.mode = self.scatter_dict[type]
 
-    def switch_chase(self): pass # If timer for the vulnerable form ends, it switches back to chasing
+    def switch_chase(self):
+        self.mode = self.chase_dict[type] # If timer for the vulnerable form ends, it switches back to chasing
     
-    def switch_run(self): pass # If 
+    def switch_run(self): # If eaten by pacman when vulnerable, switch to run away
+        self.mode = self.run_dict[type]
 
     def change_direction(self): pass
+
+    def draw(self):
+        image = self.timer.imagerect()
+        rect = image.get_rect()
+        rect.left, rect.top = self.rect.left, self.rect.top
+        self.screen.blit(image, rect)
+
+    def update(self):
+        self.draw()
 
 class Ghosts:
     def __init__(self): pass
