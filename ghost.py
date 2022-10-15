@@ -57,6 +57,7 @@ class Ghost(Sprite):
         self.screen.blit(image, rect)
 
     def update(self):
+        self.move()
         self.draw()
 
 class Ghosts:
