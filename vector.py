@@ -27,6 +27,9 @@ class Vector:
         y = float(ptb.y - pta.y)
         z = float(ptb.z - pta.z)
         return cls(x, y, z)
+    
+    def pos(self):
+        return self.x, self.y
 
     @classmethod
     def ihat(cls): return cls(1.0, 0.0, 0.0)

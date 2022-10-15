@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 from pygame.locals import *
+from node import Nodes
 import settings as setting
 
 class Game(object):
@@ -15,6 +16,8 @@ class Game(object):
     
     def startGame(self):
         self.setBackground()
+        self.nodes = Nodes()
+        self.nodes.test()
     
     def checkEvents(self):
         for event in pg.event.get():
@@ -22,13 +25,14 @@ class Game(object):
                 pg.quit()
                 sys.exit()
     
-    def render(self):
-        self.screen.blit(self.background, (0,0))
-        pg.display.update()
-    
     def update(self):
         self.checkEvents()
-        self.render()
+        self.draw()
+    
+    def draw(self):
+        self.screen.blit(self.background, (0,0))
+        self.nodes.draw(self.screen)
+        pg.display.update()
 
 if __name__ == "__main__":
     game = Game()
