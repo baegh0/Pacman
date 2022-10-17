@@ -22,7 +22,7 @@ class Game(object):
         self.setBackground()
         self.nodes = Nodes()
         self.nodes.test()
-        self.player = Player()
+        self.player = Player(self.nodes.nodes[0])
 
     
     def checkEvents(self):

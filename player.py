@@ -5,7 +5,7 @@ from settings import *
 
 class Player(object):
     def __init__(self, node):
-        self.name = PLAYER
+        self.name = 'PLAYER'
         # self.pos = Vector(200,400) #was used to spawn test player
         self.direction = STOP
         self.directions = {STOP:Vector(), UP:Vector(0, -1), DOWN:Vector(0,1),
