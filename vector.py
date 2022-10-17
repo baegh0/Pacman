@@ -195,7 +195,7 @@ class Vector(object):
     def copy(self):
         return Vector(self.x, self.y)
 
-    def asTuple(self):
+    def pos(self):
         return self.x, self.y
 
     def asInt(self):

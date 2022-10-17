@@ -20,6 +20,8 @@ class Game(object):
     
     def startGame(self):
         self.setBackground()
+        self.nodes = Nodes()
+        self.nodes.test()
         self.player = Player()
 
     
@@ -45,7 +47,7 @@ class Game(object):
     def draw(self):
         self.screen.blit(self.background, (0,0))
         self.player.draw(self.screen)
-        # self.nodes.draw(self.screen)
+        self.nodes.draw(self.screen)
         pg.display.update()
 
 if __name__ == "__main__":

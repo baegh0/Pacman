@@ -4,19 +4,39 @@ from vector import Vector
 from settings import *
 
 class Player(object):
-    def __init__(self):
-        # self.name = PLAYER
-        self.pos = Vector(200,400)
+    def __init__(self, node):
+        self.name = PLAYER
+        # self.pos = Vector(200,400) #was used to spawn test player
         self.direction = STOP
         self.directions = {STOP:Vector(), UP:Vector(0, -1), DOWN:Vector(0,1),
                             LEFT:Vector(-1,0), RIGHT:Vector(1,0)}
         self.speed = 80
         self.radius = 10
         self.color = YELLOW
+        self.node = node
+        self.setStart()
+
+    def setStart(self):
+        self.pos = self.node.position.copy()
 
     def update(self, input):
-        self.pos += self.directions[self.direction]*self.speed*input
-        self.direction = self.getKey()
+        # self.pos += self.directions[self.direction]*self.speed*input
+        direction = self.getKey()
+        self.direction = direction
+        self.node = self.nextNode(direction)
+        self.setStart()
+
+    def checkDirection(self, direction):
+        if direction is not STOP:
+            if self.node.neighbor[direction] is not None:
+                return True
+        return False
+
+    def nextNode(self, direction):
+        if self.checkDirection(direction):
+            return self.node.neighbor[direction]
+        return self.node
+
 
     def getKey(self):
         pressed = pg.key.get_pressed()
