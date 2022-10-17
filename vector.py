@@ -3,7 +3,7 @@ from math import pi
 PI_2 = pi / 2.0
 
 
-class Vector:
+class Vector2:
     # def __init__(self, x=0, y=0, z=0, li=None):
     def __init__(self, *li):
         self.dims = len(li)
@@ -51,9 +51,9 @@ class Vector:
 
     def __add__(self, o):
         if isinstance(o, float):
-            return Vector(self.x + o, self.y + o, self.z + o)
+            return Vector2(self.x + o, self.y + o, self.z + o)
         self.check_dims(self, o)
-        return Vector(*[self.data[i] + o.data[i] for i in range(self.dims)])
+        return Vector2(*[self.data[i] + o.data[i] for i in range(self.dims)])
         # return Vector(self.x + o.x, self.y + o.y, self.z + o.z)
 
     def __radd__(self, o): return self + o
@@ -63,7 +63,7 @@ class Vector:
     def __rsub__(self, o): return -(o - self)
 
     def __mul__(self, k: float):
-        return Vector(*[self.data[i] * k for i in range(self.dims)])
+        return Vector2(*[self.data[i] * k for i in range(self.dims)])
         # return Vector(k * self.x, k * self.y, k * self.z)
 
     def __rmul__(self, k: float): return self * k   # rmul means k * v (v is on the right)
@@ -72,7 +72,7 @@ class Vector:
 
     def __neg__(self):
         # return Vector(*[-self.data[i] for i in range(self.dims)])
-        return Vector(-self.x, -self.y, -self.z)
+        return Vector2(-self.x, -self.y, -self.z)
 
     def __eq__(self, v):
         self.check_dims(self, v)
@@ -119,10 +119,10 @@ class Vector:
 
     @staticmethod
     def run_tests():
-        a = Vector(1, 2, 3)
-        b = Vector(4, 5, 6)
-        c = Vector(5, 6, 2/7, 8/3)
-        d = Vector(10, 11, 12, 13, 14, 15, 16)
+        a = Vector2(1, 2, 3)
+        b = Vector2(4, 5, 6)
+        c = Vector2(5, 6, 2/7, 8/3)
+        d = Vector2(10, 11, 12, 13, 14, 15, 16)
         for i in range(a.dims):
             print(f'a[{i}] = {a.idx(i)}', end='  ')
             a.setidx(i, 10 * a.idx(i))
@@ -137,9 +137,9 @@ class Vector:
         assert(a + 5.0 == 5.0 + a)
         assert(3.0 * a / 3.0 == a)
 
-        i = Vector.ihat()
-        j = Vector.jhat()
-        k = Vector.khat()
+        i = Vector2.ihat()
+        j = Vector2.jhat()
+        k = Vector2.khat()
         print(f'ihat is: {i}')
         print(f'jhat is: {j}')
         print(f'khat is: {k}')
@@ -153,3 +153,53 @@ class Vector:
         assert(i.cross(j) == k and j.cross(k) == i and k.cross(i) == j)
         print('crosses')
         print("Vector.run_tests() passed!")
+
+class Vector(object):
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+        self.thresh = 0.000001
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __neg__(self):
+        return Vector(-self.x, -self.y)
+
+    def __mul__(self, scalar):
+        return Vector(self.x * scalar, self.y * scalar)
+
+    def __div__(self, scalar):
+        if scalar != 0:
+            return Vector(self.x / float(scalar), self.y / float(scalar))
+        return None
+
+    def __truediv__(self, scalar):
+        return self.__div__(scalar)
+
+    def __eq__(self, other):
+        if abs(self.x - other.x) < self.thresh:
+            if abs(self.y - other.y) < self.thresh:
+                return True
+        return False
+
+    def magnitudeSquared(self):
+        return self.x**2 + self.y**2
+
+    def magnitude(self):
+        return math.sqrt(self.magnitudeSquared())
+
+    def copy(self):
+        return Vector(self.x, self.y)
+
+    def asTuple(self):
+        return self.x, self.y
+
+    def asInt(self):
+        return int(self.x), int(self.y)
+
+    def __str__(self):
+        return "<"+str(self.x)+", "+str(self.y)+">"
