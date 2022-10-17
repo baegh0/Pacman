@@ -15,16 +15,25 @@ class Player(object):
         self.color = YELLOW
         self.node = node
         self.setStart()
+        self.target = node
 
     def setStart(self):
         self.pos = self.node.position.copy()
 
     def update(self, input):
-        # self.pos += self.directions[self.direction]*self.speed*input
+        self.pos += self.directions[self.direction]*self.speed*input
         direction = self.getKey()
-        self.direction = direction
-        self.node = self.nextNode(direction)
-        self.setStart()
+        # self.direction = direction
+        # self.node = self.nextNode(direction)
+        # self.setStart()
+        if self.overshootStop():
+            self.node = self.target
+            self.target = self.nextNode(direction)
+            if self.target is not self.node:
+                self.direction = direction
+            else:
+                self.direction = STOP
+            self.setStart()
 
     def checkDirection(self, direction):
         if direction is not STOP:
@@ -53,3 +62,13 @@ class Player(object):
     def draw(self, screen):
         pos = self.pos.asInt()
         pg.draw.circle(screen, self.color, pos, self.radius) # once we get the game working, replace this with jack o lanturn art
+
+    def overshootStop(self):
+        if self.target is not None:
+            vector1 = self.target.position - self.node.position
+            vector2 = self.pos - self.node.position
+            node2Target = vector1.magnitudeSquared()
+            node2Self = vector2.magnitudeSquared()
+            return node2Self >= node2Target
+        else:
+            return False
