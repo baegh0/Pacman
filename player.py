@@ -31,9 +31,17 @@ class Player(object):
             self.target = self.nextNode(direction)
             if self.target is not self.node:
                 self.direction = direction
+            # else:
+            #     self.direction = STOP
+            # self.setStart()
             else:
+                self.target = self.nextNode(self.direction)
+            if self.target is self.node:
                 self.direction = STOP
             self.setStart()
+        else:
+            if self.opposite(direction):
+                self.reverse()
 
     def checkDirection(self, direction):
         if direction is not STOP:
@@ -59,6 +67,19 @@ class Player(object):
             return RIGHT
         return STOP
         
+    def reverse(self):
+        self.direction *= -1
+        temp = self.node
+        self.node = self.target
+        self.target = temp
+
+    def opposite(self, direction):
+        if direction is not STOP:
+            if direction == self.direction * -1:
+                return True
+        else:
+            return False
+
     def draw(self, screen):
         pos = self.pos.asInt()
         pg.draw.circle(screen, self.color, pos, self.radius) # once we get the game working, replace this with jack o lanturn art
