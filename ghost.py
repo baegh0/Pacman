@@ -1,5 +1,7 @@
+from random import randint
 import pygame as pg
 from pygame.sprite import Sprite, Group
+from settings import *
 from vector import Vector
 from timer import Timer
 
@@ -19,50 +21,92 @@ class Ghost(Sprite):
     scatter_dict = {}
     run_dict = {}
 
+    def __init__(self, node):
+        self.name = None
+        self.directions = {STOP:Vector(), UP:Vector(0, -1), DOWN:Vector(0,1),
+                            LEFT:Vector(-1,0), RIGHT:Vector(1,0)}
+        self.direction = STOP
+        self.setSpeed(100)
+        self.radius = 10
+        self.collideRadius = 5
+        self.color = WHITE
+        self.node = node
+        self.setPos()
+        self.target = node
+        self.visible = True
+        self.disablePortal = False
 
-    def __init__(self, game, type):
-        super().__init__()
-        self.screen = game.screen
-        self.settings = game.settings
-        self.image = pg.image.load('images/angel ghost-0.png')
-        self.rect = self.image.get_rect()
-        self.rect.y = self.rect.height
-        self.type = type # will be the list of images that determine which ghost it is, make a dict with keys to determine which ghost it is
-        self.hit = False # will control when the ghost is hit and changes to the secondary form
-        self.mode = self.chase_dict[type]# decides which version (chase mode, scatter mode, or run mode)
-        self.timer = Timer(self.mode)
-        self.position = Vector()
+    def setPos(self):
+        self.position = self.node.position.copy()
 
-    def move(self, game):
-        self.position.x += 1
-        self.position.y += 1
+    def checkDirection(self, direction):
+        if direction is not STOP:
+            if self.node.neighbors[direction] is not None:
+                return True
+        else:
+            return False
 
-    def choose_node(self): pass
+    def nextNode(self, direction):
+        if self.checkDirection(direction):
+            return self.node.neighbor[direction]
+        return self.node
 
-    def switch_scatter(self): # If pacman eats the candy, ghosts will change to scatter mode and run awway
-        self.mode = self.scatter_dict[type]
+    def overshootStop(self):
+        if self.target is not None:
+            vector1 = self.target.position - self.node.position
+            vector2 = self.pos - self.node.position
+            node2Target = vector1.magnitudeSquared()
+            node2Self = vector2.magnitudeSquared()
+            return node2Self >= node2Target
+        else:
+            return False
 
-    def switch_chase(self):
-        self.mode = self.chase_dict[type] # If timer for the vulnerable form ends, it switches back to chasing
+    def reverse(self):
+        self.direction *= -1
+        temp = self.node
+        self.node = self.target
+        self.target = temp
+
+    def opposite(self, direction):
+        if direction is not STOP:
+            if direction == self.direction * -1:
+                return True
+        else:
+            return False
+
+    def setSpeed(self, speed):
+        self.speed = speed * BLOCK_WIDTH / 10
     
-    def switch_run(self): # If eaten by pacman when vulnerable, switch to run away
-        self.mode = self.run_dict[type]
+    def draw(self, screen):
+        if self.visible:
+            ghost_pos = self.position.asInt()
+            pg.draw.circle(screen, self.color, ghost_pos, self.radius)
 
-    def change_direction(self): pass
+    def availableDirections(self):
+        directions = []
+        for button in [UP, DOWN, LEFT, RIGHT]:
+            if self.checkDirection(button):
+                if button != self.direction * -1:
+                    directions.append(button)
+        if len(directions) == 0:
+            directions.append(self.direction * -1)
+        return directions
 
-    def draw(self):
-        image = self.timer.imagerect()
-        rect = image.get_rect()
-        rect.left, rect.top = self.rect.left, self.rect.top
-        self.screen.blit(image, rect)
-
-    def update(self):
-        self.move()
-        self.draw()
-
-class Ghosts:
-    def __init__(self): pass
-
-    def draw(self): pass
-
-    def update(self): pass
+    def Random(self, directions):
+        return directions[randint(0, len(directions)-1)]
+        
+    def update(self, x):
+        self.position += self.directions[self.direction]*self.speed*x
+        if self.overshootStop():
+            self.node = self.target
+            directions = self.checkDirection()
+            direction = self.Random(directions)
+            if not self.disablePortal:
+                if self.node.neighbor[PORTAL] is not None:
+                    self.node = self.node.neighbor[PORTAL]
+            self.target = self.nextNode(direction)
+            if self.target is not self.node:
+                self.direction = direction
+            else:
+                self.target = self.nextNode(self.direction)
+            self.setPos()
