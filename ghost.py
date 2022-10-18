@@ -29,6 +29,19 @@ class RunawayMode(object):
         self.time = 20
         self.timer = 0
 
+class ChooseMode(object):
+    def __init__(self, ghost):
+        self.timer = 0
+        self.time = None
+        self.mainMode = RunawayMode()
+        self.current = self.mainMode.mode
+        self.ghost = ghost
+
+    def update(self, x):
+        self.mainMode.update(x)
+        self.current = self.mainMode.mode
+
+
 # manages each individual ghost
 class Ghost(Sprite):
     # Chase/Regular modes:
@@ -45,7 +58,7 @@ class Ghost(Sprite):
     scatter_dict = {}
     run_dict = {}
 
-    def __init__(self, node):
+    def __init__(self, node, player=None):
         self.name = GHOST
         self.directions = {STOP:Vector(), UP:Vector(0, -1), DOWN:Vector(0,1),
                             LEFT:Vector(-1,0), RIGHT:Vector(1,0)}
@@ -61,6 +74,8 @@ class Ghost(Sprite):
         self.disablePortal = False
         self.points = 100
         self.goal = Vector()
+        self.player = player
+        self.mode = ChooseMode(self)
 
     # Sets the position of the ghost depending on the node
     def setPos(self):
@@ -139,8 +154,20 @@ class Ghost(Sprite):
         index = distance_list(min(distance_list))
         return distance_list[index]
 
+    def runaway(self):
+        self.goal = Vector()
+
+    def chase(self):
+        self.goal = self.player.position
+
     # Updates the position of the Ghost depending on the next node
     def update(self, x):
+        self.mode.update(x)
+        if self.mode.current is RUNAWAY:
+            self.runaway()
+        elif self.mode.current is CHASE:
+            self.chase()
+
         self.position += self.directions[self.direction]*self.speed*x
         if self.overshootStop():
             self.node = self.target

@@ -23,7 +23,7 @@ class Game(object):
         self.nodes = Nodes()
         self.nodes.test()
         self.player = Player(self.nodes.nodes[0])
-        self.ghost = Ghost(self.nodes.getStartNode()) #getStartNode() has not been implemeneted in node.py yet
+        self.ghost = Ghost(self.nodes.getStartNode(), self.player) #getStartNode() has not been implemeneted in node.py yet
 
     
     def checkEvents(self):
