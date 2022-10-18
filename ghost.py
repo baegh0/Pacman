@@ -6,6 +6,29 @@ from settings import *
 from vector import Vector
 from timer import Timer
 
+class RunawayMode(object):
+    def __init__(self):
+        self.timer = 0
+        self.runaway()
+
+    def upate(self, x):
+        self.timer += x
+        if self.timer >= self.time:
+            if self.mode is RUNAWAY:
+                self.chase()
+            elif self.mode is CHASE:
+                self.runaway()
+
+    def runaway(self):
+        self.mode = RUNAWAY
+        self.time = 5
+        self.timer = 0
+
+    def chase(self):
+        self.mode = CHASE
+        self.time = 20
+        self.timer = 0
+
 # manages each individual ghost
 class Ghost(Sprite):
     # Chase/Regular modes:
