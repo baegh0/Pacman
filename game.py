@@ -20,10 +20,11 @@ class Game(object):
     
     def startGame(self):
         self.setBackground()
-        self.nodes = Nodes()
-        self.nodes.test()
-        self.player = Player(self.nodes.nodes[0])
-        self.ghost = Ghost(self.nodes.getStartNode(), self.player) #getStartNode() has not been implemeneted in node.py yet
+        self.nodes = Nodes("maze.txt")
+        # self.nodes.test()
+        # self.player = Player(self.nodes.nodes[0])
+        self.player = Player(self.nodes.getStartNode())
+        # self.ghost = Ghost(self.nodes.getStartNode(), self.player) #getStartNode() has not been implemeneted in node.py yet
 
     
     def checkEvents(self):
@@ -42,7 +43,7 @@ class Game(object):
     def update(self):
         timer = self.clock.tick(30) / 1000
         self.player.update(timer)
-        self.ghost.update(timer)
+        # self.ghost.update(timer)
         self.checkEvents()
         self.draw()
     
@@ -50,7 +51,7 @@ class Game(object):
         self.screen.blit(self.background, (0,0))
         self.player.draw(self.screen)
         self.nodes.draw(self.screen)
-        self.ghost.draw(self.screen)
+        # self.ghost.draw(self.screen)
         pg.display.update()
 
 if __name__ == "__main__":
