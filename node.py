@@ -34,7 +34,7 @@ class Nodes(object):
         mazeData = self.readMazeFile(maze)
         self.createNodeGraph(mazeData)
         self.connectHorizontal(mazeData)
-        self.conntectVertical(mazeData)
+        self.connectVertical(mazeData)
 
     # TEST
     # def test(self):
@@ -101,13 +101,13 @@ class Nodes(object):
         for column in list(range(transposedData.shape[0])):
             key = None
             for row in list(range(transposedData.shape[1])):
-                if transposedData[column[row]] in self.nodeSymbols:
+                if transposedData[column][row] in self.nodeSymbols:
                     if key is None:
                         key = self.createKey(column+x_offset, row+y_offset)
                     else:
                         next_key = self.createKey(column+x_offset, row+y_offset)
                         self.nodesLIST[key].neighbor[down] = self.nodesLIST[next_key]
-                        self.nodesLIST[next_key].neightbor[up] = self.nodesLIST[key]
+                        self.nodesLIST[next_key].neighbor[up] = self.nodesLIST[key]
                         key = next_key
                 elif transposedData[column][row] not in self.pathSymbols:
                     key = None
@@ -126,7 +126,7 @@ class Nodes(object):
     
     #This is temporary
     def getStartNode(self):
-        nodes = list(self.nodesLIST.vales())
+        nodes = list(self.nodesLIST.values())
         return nodes[0]
     
     def draw(self, screen):
