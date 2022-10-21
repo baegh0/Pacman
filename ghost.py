@@ -6,6 +6,7 @@ from settings import *
 from vector import Vector
 from timer import Timer
 
+# Class that sets ghost to run away or chase from player
 class RunawayMode(object):
     def __init__(self):
         self.timer = 0
@@ -29,6 +30,7 @@ class RunawayMode(object):
         self.time = 20
         self.timer = 0
 
+# Class that sets which mode to set ghosts to
 class ChooseMode(object):
     def __init__(self, ghost):
         self.timer = 0
