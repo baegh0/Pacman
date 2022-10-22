@@ -28,6 +28,8 @@ class Player(object):
         # self.setStart()
         if self.overshootStop():
             self.node = self.target
+            if self.node.neighbor[PORTAL] is not None:
+                self.node = self.node.neighbor[PORTAL]
             self.target = self.nextNode(direction)
             if self.target is not self.node:
                 self.direction = direction

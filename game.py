@@ -21,6 +21,7 @@ class Game(object):
     def startGame(self):
         self.setBackground()
         self.nodes = Nodes("maze.txt")
+        self.nodes.setSides((0,17), (27,17))
         # self.nodes.test()
         # self.player = Player(self.nodes.nodes[0])
         self.player = Player(self.nodes.getStartNode())

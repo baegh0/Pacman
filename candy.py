@@ -1,32 +1,21 @@
+from random import randrange
 import pygame as pg
 from pygame.sprite import Sprite
+from vector import Vector
+from settings import *
+import numpy as np
 
+class Candy(object):
+    def __init__(self, row, column):
+        self.color = (randrange(216,243),randrange(216,243),randrange(216,243))
+        self.name = SMALL_CANDY
+        self.position = Vector(column * BLOCK_WIDTH, row * BLOCK_HEIGHT)
+        self.radius = int(4 * BLOCK_WIDTH / 16)
+        self.collide_radius = int(4* BLOCK_WIDTH / 16)
+        self.visible = True
+        self.points = 5
 
-class Candy(Sprite):
-
-    def __init__(self, game):
-        super().__init__()
-        self.game = game
-        self.screen = self.game.surface
-
-        self.rect.left = 259
-        self.rect.top = 363
-        self.x = float(self.rect.x)
-
-        self.image = pg.image.load('images/chocolate_bars-0.png')
-        self.rect = self.image.get_rect()
-
-
-    def width(self): return self.rect.width
-
-    def height(self): return self.rect.height
-
-    def check_edges(self):
-        r = self.rect
-        s_r = self.screen.get_rect()
-        return r.right >= s_r.right or r.left <= 0
-
-    def draw(self): self.screen.blit(self.image, self.rect)
-
-    def update(self):
-        self.draw()
+    def draw(self, screen):
+        if self.visible:
+            pos = self.position.asInt()
+            pg.draw.circle(screen, self.collide_radius, pos, self.radius)

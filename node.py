@@ -7,6 +7,7 @@ up = setting.UP
 down = setting.DOWN
 right = setting.RIGHT
 left = setting.LEFT
+portal = setting.PORTAL
 
 class Node:
     def __init__(self, x, y):
@@ -14,7 +15,8 @@ class Node:
         self.neighbor = {up:None, 
                          down:None,
                          right:None,
-                         left:None}
+                         left:None,
+                         portal:None}
     
     def draw(self, screen):
         for i in self.neighbor.keys():
@@ -132,3 +134,10 @@ class Nodes(object):
     def draw(self, screen):
         for node in self.nodesLIST.values():
             node.draw(screen)
+
+    def setSides(self, left_side, right_side):
+        key1 = self.createKey(*left_side)
+        key2 = self.createKey(*right_side)
+        if key1 in self.nodesLIST.keys() and key2 in self.nodesLIST.keys():
+            self.nodesLIST[key1].neighbor[portal] = self.nodesLIST[key2]
+            self.nodesLIST[key2].neighbor[portal] = self.nodesLIST[key1]
