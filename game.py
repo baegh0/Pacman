@@ -5,6 +5,7 @@ from node import Nodes
 import settings as setting
 from ghost import Ghost
 from player import Player
+from candy import CandyGroup
 
 class Game(object):
     def __init__(self):
@@ -21,9 +22,11 @@ class Game(object):
     def startGame(self):
         self.setBackground()
         self.nodes = Nodes("maze.txt")
+        self.nodes.setSides((0,17), (27,17))
         # self.nodes.test()
         # self.player = Player(self.nodes.nodes[0])
         self.player = Player(self.nodes.getStartNode())
+        self.candy = CandyGroup('maze.txt')
         # self.ghost = Ghost(self.nodes.getStartNode(), self.player) #getStartNode() has not been implemeneted in node.py yet
 
     
@@ -44,6 +47,7 @@ class Game(object):
         timer = self.clock.tick(30) / 1000
         self.player.update(timer)
         # self.ghost.update(timer)
+        self.candy.update(timer)
         self.checkEvents()
         self.draw()
     
@@ -51,6 +55,7 @@ class Game(object):
         self.screen.blit(self.background, (0,0))
         self.player.draw(self.screen)
         self.nodes.draw(self.screen)
+        self.candy.draw(self.screen)
         # self.ghost.draw(self.screen)
         pg.display.update()
 
