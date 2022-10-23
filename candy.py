@@ -24,16 +24,22 @@ class Candy_Bar(Candy):
     def __init__(self, row, column):
         Candy.__init__(self, row, column)
         self.name = CANDY_BAR
-        self.radius = int(8 * BLOCK_WIDTH / 16)
+        self.image = pg.image.load('images\chocolate_bars-0.png')
         self.points = 100
         self.flashing_timer = 0.2
         self.timer = 0
+        self.position = Vector(column * BLOCK_WIDTH -30, row * BLOCK_HEIGHT - 30)
 
     def update(self, time):
         self.timer += time
         if self.timer >= self.flashing_timer:
             self.visible = not self.visible
             self.timer = 0
+
+    def draw(self, screen):
+        if self.visible:
+            pos = self.position.asInt()
+            screen.blit(self.image, pos)
 
 class CandyGroup(object):
     def __init__(self, candyfile):
