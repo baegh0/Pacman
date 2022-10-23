@@ -40,7 +40,7 @@ PLAYER = 0
 SMALL_CANDY = 1
 CANDY_BAR = 2
 GHOST = 3
-PORTAL = 3
+PORTAL = 4
 
 #===============================
 #            Modes
