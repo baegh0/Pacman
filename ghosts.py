@@ -4,6 +4,7 @@ from vector import Vector2
 from constants import *
 from entity import Entity
 from modes import ModeController
+from timer import Timer
 
 class Ghost(Entity):
     def __init__(self, node, pacman=None, blinky=None):
@@ -30,6 +31,12 @@ class Ghost(Entity):
         elif self.mode.current is CHASE:
             self.chase()
         Entity.update(self, dt)
+
+    def render(self, screen):
+        image = self.timer.image()
+        adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
+        p = self.position - adjust
+        screen.blit(image, p.asTuple())
 
     def scatter(self):
         self.goal = Vector2()
@@ -65,13 +72,18 @@ class Blinky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = BLINKY
-        self.image = pygame.image.load(f'images/baseghost.png')
+        self.image = pygame.image.load(f'images/angelghost-0.png')
+        self.image_list = [pygame.image.load(f'images/angelghost-0.png'), pygame.image.load(f'images/angelghost-1.png')]
+        self.timer = Timer(image_list=self.image_list, delay=150)
 
 class Pinky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = PINKY
         self.image = pygame.image.load('images/butterflyghost-0.png')
+        self.image_list = [pygame.image.load(f'images/butterflyghost-0.png'), pygame.image.load(f'images/butterflyghost-1.png')]
+        self.timer = Timer(image_list=self.image_list, delay=150)
+
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, 0)
@@ -84,6 +96,9 @@ class Inky(Ghost):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = INKY
         self.image = pygame.image.load('images/witchghost-0.png')
+        self.image_list = [pygame.image.load(f'images/witchghost-0.png'), pygame.image.load(f'images/witchghost-1.png')]
+        self.timer = Timer(image_list=self.image_list, delay=150)
+
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, TILEHEIGHT*NROWS)
@@ -98,6 +113,9 @@ class Clyde(Ghost):
         Ghost.__init__(self, node, pacman, blinky)
         self.name = CLYDE
         self.image = pygame.image.load('images/devilghost-0.png')
+        self.image_list = [pygame.image.load(f'images/devilghost-0.png'), pygame.image.load(f'images/devilghost-1.png')]
+        self.timer = Timer(image_list=self.image_list, delay=150)
+
 
     def scatter(self):
         self.goal = Vector2(0, TILEHEIGHT*NROWS)
