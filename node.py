@@ -31,7 +31,7 @@ class Nodes(object):
         # self.nodes = []
         self.maze = maze
         self.nodesLIST = {}
-        self.nodeSymbols = ['+']
+        self.nodeSymbols = ['+', 'p']
         self.pathSymbols = ['.']
         mazeData = self.readMazeFile(maze)
         self.createNodeGraph(mazeData)
