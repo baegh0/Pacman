@@ -3,8 +3,10 @@ from pygame.locals import *
 from vector import Vector2
 from constants import *
 from entity import Entity
+from timer import Timer
 
 class Pacman(Entity):
+    pumpkin_images = [pygame.image.load(f'images/pumpkinman0.png'), pygame.image.load(f'images/pumpkinman1.png')]
     def __init__(self, node):
         Entity.__init__(self, node )
         self.name = PACMAN    
@@ -13,6 +15,13 @@ class Pacman(Entity):
         self.setBetweenNodes(LEFT)
         self.alive = True
         self.image = pygame.image.load('images/pumpkinman0.png')
+        self.timer = Timer(image_list = self.pumpkin_images, delay=200)
+
+    def render(self,screen):
+        image = self.timer.image()
+        adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
+        p = self.position - adjust
+        screen.blit(image, p.asTuple())
 
     def reset(self):
         Entity.reset(self)
