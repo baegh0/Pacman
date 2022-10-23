@@ -7,7 +7,7 @@ class Fruit(Entity):
         Entity.__init__(self, node)
         self.name = FRUIT
         self.color = GREEN
-        self.image = pygame.image.load('images/chocolate_bars-0.png')
+        self.image = pygame.image.load('images/apple.png')
         self.lifespan = 5
         self.timer = 0
         self.destroy = False
