@@ -12,7 +12,7 @@ NUM_ROWS = 36
 # Tuple of screen size
 SCREENWIDTH = NUM_COLS*BLOCK_WIDTH
 SCREENHEIGHT = NUM_ROWS*BLOCK_HEIGHT
-SCREENSIZE = (SCREENWIDTH, SCREENHEIGHT)
+SCREENSIZE = (SCREENWIDTH, SCREENHEIGHT) #for reference our screen is 672 x 864
 
 #===============================
 #           Colors
