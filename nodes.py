@@ -1,7 +1,6 @@
 import pygame
 from vector import Vector2
 from constants import *
-import numpy as np
 
 class Node(object):
     def __init__(self, x, y):
@@ -73,13 +72,6 @@ class NodeGroup(object):
         for node in self.nodesList.values():
             node.render(screen)
 
-    def createNodeTable(self, data, xoffset=0, yoffset=0):
-        for row in list(range(data.shape[0])):
-            for col in list(range(data.shape[1])):
-                if data[row][col] in self.nodeSymbols:
-                    x, y = self.constructKey(col+xoffset, row+yoffset)
-                    self.nodesList[(x, y)] = Node(x, y)
-
     def constructKey(self, x, y):
         return x * TILEWIDTH, y * TILEHEIGHT
 
@@ -144,13 +136,13 @@ class NodeGroup(object):
             self.position = (self.node.position + self.target.position) / 2.0
 
     def createHomeNodes(self, xoffset, yoffset):
-        homedata = np.array([['X','X','+','X','X'],
+        homedata = ([['X','X','+','X','X'],
                              ['X','X','.','X','X'],
                              ['+','X','.','X','+'],
                              ['+','.','+','.','+'],
                              ['+','X','X','X','+']])
 
-        self.createNodeTable(homedata, xoffset, yoffset)
+        self.createNodeGraph(homedata, xoffset, yoffset)
         self.connectHorizontal(homedata, xoffset, yoffset)
         self.connectVertical(homedata, xoffset, yoffset)
         self.homekey = self.constructKey(xoffset+2, yoffset)
