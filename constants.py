@@ -1,27 +1,22 @@
-import pygame as pg
-from vector import Vector
-#===============================
-#       Screen Dimensions
-#===============================
-# 24x24 Blocks
-BLOCK_WIDTH = 24
-BLOCK_HEIGHT = 24
-# There are 28x36 Blocks
-NUM_COLS = 28
-NUM_ROWS = 36
-# Tuple of screen size
-SCREENWIDTH = NUM_COLS*BLOCK_WIDTH
-SCREENHEIGHT = NUM_ROWS*BLOCK_HEIGHT
+# SCREEN
+TILEWIDTH = 24
+TILEHEIGHT = 24
+NROWS = 36
+NCOLS = 28
+SCREENWIDTH = NCOLS*TILEWIDTH
+SCREENHEIGHT = NROWS*TILEHEIGHT
 SCREENSIZE = (SCREENWIDTH, SCREENHEIGHT)
 
 #===============================
 #           Colors
 #===============================
-BLACK = (0,0,0)
-WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+PINK = (255,100,150)
+TEAL = (100,255,255)
+ORANGE = (230,190,40)
 GREEN = (0, 255, 0)
 
 #===============================
@@ -36,17 +31,32 @@ RIGHT = -2
 #===============================
 #         Compononents
 #===============================
-PLAYER = 0
-SMALL_CANDY = 1
-CANDY_BAR = 2
+PACMAN = 0
 GHOST = 3
-PORTAL = 4
+PORTAL = 3
+PELLET = 1
+POWERPELLET = 2
+BLINKY = 4
+PINKY = 5
+INKY = 6
+CLYDE = 7
+FRUIT = 8
 
 #===============================
 #            Modes
 #===============================
-
-RUNAWAY = 0
+SCATTER = 0
 CHASE = 1
-VULNERABLE = 2
+FREIGHT = 2
 SPAWN = 3
+
+#===============================
+#            Score
+#===============================
+SCORETXT = 0
+LEVELTXT = 1
+READYTXT = 2
+PAUSETXT = 3
+GAMEOVERTXT = 4
+
+
