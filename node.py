@@ -1,7 +1,6 @@
 import pygame as pg
 import settings as setting
 from vector import Vector
-import numpy as np
 
 up = setting.UP
 down = setting.DOWN
@@ -28,54 +27,40 @@ class Node:
 
 class Nodes(object):
     def __init__(self, maze):
-        # self.nodes = []
-        self.maze = maze
         self.nodesLIST = {}
         self.nodeSymbols = ['+', 'p']
         self.pathSymbols = ['.']
-        mazeData = self.readMazeFile(maze)
-        self.createNodeGraph(mazeData)
-        self.connectHorizontal(mazeData)
-        self.connectVertical(mazeData)
-
-    # TEST
-    # def test(self):
-    #     nodeA = Node(80 ,80)
-    #     nodeB = Node(160, 80)
-    #     nodeC = Node(80, 160)
-    #     nodeD = Node(160, 160)
-    #     nodeE = Node(208, 160)
-    #     nodeF = Node(80, 320)
-    #     nodeG = Node(208, 320)
-    #     nodeA.neighbor[right] = nodeB
-    #     nodeA.neighbor[down] = nodeC
-    #     nodeB.neighbor[left] = nodeA
-    #     nodeB.neighbor[down] = nodeD
-    #     nodeC.neighbor[up] = nodeA
-    #     nodeC.neighbor[right] = nodeD
-    #     nodeC.neighbor[down] = nodeF
-    #     nodeD.neighbor[up] = nodeB
-    #     nodeD.neighbor[left] = nodeC
-    #     nodeD.neighbor[right] = nodeE
-    #     nodeE.neighbor[left] = nodeD
-    #     nodeE.neighbor[down] = nodeG
-    #     nodeF.neighbor[up] = nodeC
-    #     nodeF.neighbor[right] = nodeG
-    #     nodeG.neighbor[up] = nodeE
-    #     nodeG.neighbor[left] = nodeF
-    #     self.nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]
-
-    # Reads and returns data from our maze.txt
-    def readMazeFile(self, textfile):
-        return np.loadtxt(textfile, dtype='<U1')
+        self.mazeData = self.openMaze(maze)
+        self.createNodeGraph(self.mazeData)
+        self.connectHorizontal(self.mazeData)
+        self.connectVertical(self.mazeData)
 
     # Creates the Nodes based on the x and y positions from our text file
     def createNodeGraph(self, data, add_x=0, add_y=0):
-        for row in list(range(data.shape[0])):
-            for column in list(range(data.shape[1])):
+        for row in range(len(data)):
+            for column in range(len(data[row])):
                 if data[row][column] in self.nodeSymbols:
                     x, y = self.createKey(column+add_x, row+add_y)
                     self.nodesLIST[(x,y)] = Node(x,y)
+    
+    # Open Maze and create it into a list
+    def openMaze(self, maze):
+        l = []
+        with open(maze) as m:
+            for line in m:
+                newM = ''.join(line.split())
+                l.append(list(newM.strip()))
+        return l
+
+    # Replaces Numpy's Transpose method
+    def transpose(self, data):
+        new = [[0] * len(data) for _ in range(len(data[0]))]
+
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                new[col][row] = data[row][col]
+
+        return new
 
     # Creates Key depending on XY location
     def createKey(self, x, y):
@@ -83,9 +68,9 @@ class Nodes(object):
 
     # Connects nodes horizontally
     def connectHorizontal(self, data, x_offset=0, y_offset=0):
-        for row in list(range(data.shape[0])):
+        for row in list(range(len(data))):
             key = None
-            for column in list(range(data.shape[1])):
+            for column in list(range(len(data[row]))):
                 if data[row][column] in self.nodeSymbols:
                     if key is None:
                         key =self.createKey(column+x_offset, row+y_offset)
@@ -99,19 +84,19 @@ class Nodes(object):
 
     # Connects nodes vertically
     def connectVertical(self, data, x_offset=0, y_offset=0):
-        transposedData = data.transpose()
-        for column in list(range(transposedData.shape[0])):
+        transposedData = self.transpose(data)
+        for row in range(len(transposedData)):
             key = None
-            for row in list(range(transposedData.shape[1])):
-                if transposedData[column][row] in self.nodeSymbols:
+            for col in range(len(transposedData[row])):
+                if transposedData[row][col] in self.nodeSymbols:
                     if key is None:
-                        key = self.createKey(column+x_offset, row+y_offset)
+                        key = self.createKey(row+x_offset, col+y_offset)
                     else:
-                        next_key = self.createKey(column+x_offset, row+y_offset)
+                        next_key = self.createKey(row+x_offset, col+y_offset)
                         self.nodesLIST[key].neighbor[down] = self.nodesLIST[next_key]
                         self.nodesLIST[next_key].neighbor[up] = self.nodesLIST[key]
                         key = next_key
-                elif transposedData[column][row] not in self.pathSymbols:
+                elif transposedData[row][col] not in self.pathSymbols:
                     key = None
 
     def getPixelLocation(self, x, y):
@@ -119,6 +104,7 @@ class Nodes(object):
             return self.nodesLIST[(x,y)]
         else:
             return None
+
     def getTileLocation(self, column, row):
         x, y = self.createKey(column, row)
         if(x,y) in self.nodesLIST.keys():

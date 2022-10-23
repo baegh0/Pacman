@@ -23,10 +23,8 @@ class Game(object):
         self.setBackground()
         self.nodes = Nodes("maze.txt")
         self.nodes.setSides((0,17), (27,17))
-        # self.nodes.test()
-        # self.player = Player(self.nodes.nodes[0])
         self.player = Player(self.nodes.getStartNode())
-        self.candy = CandyGroup('maze.txt')
+        self.candy = CandyGroup()
         # self.ghost = Ghost(self.nodes.getStartNode(), self.player) #getStartNode() has not been implemeneted in node.py yet
 
     
