@@ -159,7 +159,7 @@ class GhostGroup(object):
                     self.game.textgroup.addText(str(ghost.points), 
                                             WHITE, ghost.position.x, ghost.position.y, 8, time=1)
                     self.updatePoints()
-                    self.pause.setPause(pauseTime=1, func=self.game.showEntities())
+                    self.game.pause.setPause(pauseTime=1, func=self.game.showEntities)
                     ghost.startSpawn()
                     self.game.NodeGroup.allowHomeAccess(ghost)
                 elif ghost.mode.current is not SPAWN:
