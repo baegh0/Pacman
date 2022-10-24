@@ -5,11 +5,12 @@ from constants import *
 from pacman import Pacman
 from nodes import NodeGroup
 from pellets import PelletGroup
-from ghosts import GhostGroup
+from ghosts import *
 from fruit import Fruit
 from pause import Pause
 from text import TextGroup
 from sound import Sound
+from timer import Timer
 
 class LifeIcons(object):
     def __init__(self, numlives) -> None:
@@ -48,10 +49,31 @@ class GameController(object):
 
     def startScreen(self):
         self.sound.startupsfx()
+        pacman = [pygame.image.load('images/pumpkinman0.png'), pygame.image.load('images/pumpkinman1.png')]
+        ghost_1 = [pygame.transform.flip(pygame.image.load('images/angelghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/angelghost-1.png'), True, False)]
+        ghost_2 = [pygame.transform.flip(pygame.image.load('images/butterflyghost-0.png'),True, False),pygame.transform.flip(pygame.image.load('images/butterflyghost-1.png'),True, False)]
+        ghost_3 = [pygame.transform.flip(pygame.image.load('images/devilghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/devilghost-1.png'), True, False)]
+        ghost_4 = [pygame.transform.flip(pygame.image.load('images/witchghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/witchghost-1.png'), True, False)]
+        pacman_timer = Timer(image_list = pacman, delay = 200)
+        ghost1_timer = Timer(image_list= ghost_1, delay = 150)
+        ghost2_timer = Timer(image_list= ghost_2, delay = 150)
+        ghost3_timer = Timer(image_list= ghost_3, delay = 150)
+        ghost4_timer = Timer(image_list= ghost_4, delay = 150)
+
+        start_position = 672
         while True:
             self.screen.blit(self.titlescreen, (0,0))
+            image = pacman_timer.image()
+            self.screen.blit(image, (start_position, SCREENHEIGHT / 2))
+            self.screen.blit(ghost1_timer.image(), (start_position + 70, SCREENHEIGHT / 2))
+            self.screen.blit(ghost2_timer.image(), (start_position + 140, SCREENHEIGHT / 2))
+            self.screen.blit(ghost3_timer.image(), (start_position + 210, SCREENHEIGHT / 2))
+            self.screen.blit(ghost4_timer.image(), (start_position + 280, SCREENHEIGHT / 2))
+            start_position -= 2
             pygame.display.flip()
             self.check_button()
+
+
 
     # Checks if the play button is pressed or the high score button
     def check_button(self):
@@ -78,12 +100,6 @@ class GameController(object):
         self.pause.paused = True
         self.fruit = None
         self.startGame()
-        self.score = 0
-        self.textgroup.updateScore(self.score)
-        self.textgroup.updateScore(self.high_score)
-        self.textgroup.updateLevel(self.level)
-        self.textgroup.showText(READYTXT)
-        self.lifesprites.resetLives(self.lives)
 
     def resetLevel(self):
         self.pause.paused = True
@@ -94,8 +110,6 @@ class GameController(object):
 
     def setBackground(self):
         self.screen.blit(self.background, (0, 0))
-
-        
 
     def startGame(self):
         self.sound.play_bg()
