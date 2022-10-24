@@ -45,7 +45,10 @@ class PowerPellet(Pellet):
             screen.blit(self.image, pos)
 
 class PelletGroup(object):
-    def __init__(self):
+    def __init__(self,game):
+        self.game = game
+        self.pacman = game.pacman
+        self.ghosts = game.ghosts
         self.pelletList = []
         self.powerpellets = []
         self.pelletFile = self.readPelletfile()
@@ -73,6 +76,24 @@ class PelletGroup(object):
         if len(self.pelletList) == 0:
             return True
         return False
+
+    def checkPelletEvents(self):
+        pellet = self.pacman.eatPellets(self.pelletList)
+        pp = self.pacman.eatPellets(self.powerpellets)
+        if pellet:
+            self.numEaten += 1
+            self.game.updateScore(pellet.points)
+            if self.numEaten == 30:
+                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
+            if self.numEaten == 70:
+                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
+            self.pelletList.remove(pellet)
+            if pp:
+                self.ghosts.startFreight()
+                self.powerpellets.remove(pp)
+            if self.isEmpty():
+                self.game.hideEntities()
+                self.game.pause.setPause(pauseTime=3, func=self.game.nextLevel)
     
     def render(self, screen):
         for pellet in self.pelletList:

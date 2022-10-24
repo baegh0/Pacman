@@ -42,6 +42,9 @@ class GameController(object):
         self.lifesprites = LifeIcons(self.lives)
         self.NodeGroup = NodeGroup()
         self.sound = Sound(bg_music="sounds/PacManOP.mp3")
+        self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
+        self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self)
+        self.pellets = PelletGroup(self)
 
     def startScreen(self):
         self.sound.startupsfx()
@@ -101,9 +104,6 @@ class GameController(object):
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)
         self.NodeGroup.connectHomeNodes(homekey, (15,14), RIGHT)
-        self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
-        self.pellets = PelletGroup()
-        self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self.pacman)
         self.ghosts.blinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
         self.ghosts.pinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
         self.ghosts.inky.setStartNode(self.NodeGroup.getNodeFromTiles(0+11.5, 3+14))
@@ -132,8 +132,8 @@ class GameController(object):
             self.ghosts.update(dt)        
             if self.fruit is not None:
                 self.fruit.update(dt)
-            self.checkPelletEvents()
-            self.checkGhostEvents()
+            self.pellets.checkPelletEvents()
+            self.ghosts.checkGhostEvents()
             self.checkFruitEvents()
         afterPauseMethod = self.pause.update(dt)
         if afterPauseMethod is not None:
@@ -199,38 +199,6 @@ class GameController(object):
             self.screen.blit(self.lifesprites.images[i], (x, y))
         pygame.display.update()
 
-    def checkGhostEvents(self):
-       for ghost in self.ghosts:
-            if self.pacman.collideGhost(ghost):
-                if ghost.mode.current is FREIGHT:
-                    self.pacman.visible = False
-                    ghost.visible = False
-                    self.sound.runningawaysfx()
-                    self.updateScore(ghost.points)
-                    self.textgroup.addText(str(ghost.points), 
-                                            WHITE, ghost.position.x, ghost.position.y, 8, time=1)
-                    self.ghosts.updatePoints()
-                    self.pause.setPause(pauseTime=1, func=self.showEntities)
-                    ghost.startSpawn()
-                    self.NodeGroup.allowHomeAccess(ghost)
-                elif ghost.mode.current is not SPAWN:
-                     if self.pacman.alive:
-                         self.lives -=  1
-                         self.lifesprites.removeImage()
-                         self.pacman.die()
-                         self.ghosts.hide()
-                         if self.lives <= 0:
-                             self.textgroup.showText(GAMEOVERTXT)
-                             self.sound.gameover()
-                             if self.score > self.high_score:
-                                self.saveHighScore(self.score)
-                                self.textgroup.updateHighScore(self.high_score)
-                             self.pause.setPause(pauseTime=3, func=self.restartGame)
-                         else:
-                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
-
-
-
     def showEntities(self):
         self.pacman.visible = True
         self.ghosts.show()
@@ -252,24 +220,6 @@ class GameController(object):
                 self.fruit = None
             elif self.fruit.destroy:
                 self.fruit = None
-
-    def checkPelletEvents(self):
-        pellet = self.pacman.eatPellets(self.pellets.pelletList)
-        pp = self.pacman.eatPellets(self.pellets.powerpellets)
-        if pellet:
-            self.pellets.numEaten += 1
-            self.updateScore(pellet.points)
-            if self.pellets.numEaten == 30:
-                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
-            if self.pellets.numEaten == 70:
-                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
-            self.pellets.pelletList.remove(pellet)
-            if pp:
-                self.ghosts.startFreight()
-                self.pellets.powerpellets.remove(pp)
-            if self.pellets.isEmpty():
-                self.hideEntities()
-                self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
 if __name__ == "__main__":
     game = GameController()
