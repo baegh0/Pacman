@@ -33,6 +33,8 @@ class Ghost(Entity):
         Entity.update(self, dt)
 
     def render(self, screen):
+        img_list = self.invert_image_list if self.mode.current == FREIGHT else self.image_list
+        self.timer = Timer(image_list=img_list, delay=150)
         image = self.timer.image()
         adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
         p = self.position - adjust
@@ -61,7 +63,7 @@ class Ghost(Entity):
         self.mode.setFreightMode()
         if self.mode.current == FREIGHT:
             self.setSpeed(50)
-            self.directionMethod = self.randomDirection         
+            self.directionMethod = self.randomDirection    
 
     def normalMode(self):
         self.setSpeed(100)
@@ -74,9 +76,7 @@ class Blinky(Ghost):
         self.name = BLINKY
         self.image = pygame.image.load(f'images/angelghost-0.png')
         self.image_list = [pygame.image.load(f'images/angelghost-0.png'), pygame.image.load(f'images/angelghost-1.png')]
-        self.invert_image_list = [pygame.image.load(f'images/angelinverted-{n}') for n in range(2)]
-        self.timer = Timer(image_list=self.image_list, delay=150)
-        self.timer = Timer(image_list=self.invert_image_list, delay=150)
+        self.invert_image_list = [pygame.image.load(f'images/angelinverted-{n}.png') for n in range(2)]
 
 class Pinky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
@@ -84,9 +84,7 @@ class Pinky(Ghost):
         self.name = PINKY
         self.image = pygame.image.load('images/butterflyghost-0.png')
         self.image_list = [pygame.image.load(f'images/butterflyghost-0.png'), pygame.image.load(f'images/butterflyghost-1.png')]
-        self.invert_image_list = [pygame.image.load(f'images/butterflyinverted-{n}') for n in range(2)]
-        self.timer = Timer(image_list=self.image_list, delay=150)
-        self.timer = Timer(image_list=self.invert_image_list, delay=150)
+        self.invert_image_list = [pygame.image.load(f'images/butterflyinverted-{n}.png') for n in range(2)]
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, 0)
@@ -100,9 +98,7 @@ class Inky(Ghost):
         self.name = INKY
         self.image = pygame.image.load('images/witchghost-0.png')
         self.image_list = [pygame.image.load(f'images/witchghost-0.png'), pygame.image.load(f'images/witchghost-1.png')]
-        self.invert_image_list = [pygame.image.load(f'images/witchinverted-{n}') for n in range(2)]
-        self.timer = Timer(image_list=self.image_list, delay=150)
-        self.timer = Timer(image_list=self.invert_image_list, delay=150)
+        self.invert_image_list = [pygame.image.load(f'images/witchinverted-{n}.png') for n in range(2)]
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, TILEHEIGHT*NROWS)
@@ -118,9 +114,7 @@ class Clyde(Ghost):
         self.name = CLYDE
         self.image = pygame.image.load('images/devilghost-0.png')
         self.image_list = [pygame.image.load(f'images/devilghost-0.png'), pygame.image.load(f'images/devilghost-1.png')]
-        self.invert_image_list = [pygame.image.load(f'images/devilinverted-{n}') for n in range(2)]
-        self.timer = Timer(image_list=self.image_list, delay=150)
-        self.timer = Timer(image_list=self.invert_image_list, delay=150)
+        self.invert_image_list = [pygame.image.load(f'images/devilinverted-{n}.png') for n in range(2)]
 
     def scatter(self):
         self.goal = Vector2(0, TILEHEIGHT*NROWS)
