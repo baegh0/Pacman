@@ -46,10 +46,10 @@ class GameController(object):
     def startScreen(self):
         self.sound.startupsfx()
         pacman = [pygame.image.load('images/pumpkinman0.png'), pygame.image.load('images/pumpkinman1.png')]
-        ghost_1 = [pygame.image.load('images/angelghost-0.png'), pygame.image.load('images/angelghost-1.png')]
-        ghost_2 = [pygame.image.load('images/butterflyghost-0.png'), pygame.image.load('images/butterflyghost-1.png')]
-        ghost_3 = [pygame.image.load('images/devilghost-0.png'), pygame.image.load('images/devilghost-1.png')]
-        ghost_4 = [pygame.image.load('images/witchghost-0.png'), pygame.image.load('images/witchghost-1.png')]
+        ghost_1 = [pygame.transform.flip(pygame.image.load('images/angelghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/angelghost-1.png'), True, False)]
+        ghost_2 = [pygame.transform.flip(pygame.image.load('images/butterflyghost-0.png'),True, False),pygame.transform.flip(pygame.image.load('images/butterflyghost-1.png'),True, False)]
+        ghost_3 = [pygame.transform.flip(pygame.image.load('images/devilghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/devilghost-1.png'), True, False)]
+        ghost_4 = [pygame.transform.flip(pygame.image.load('images/witchghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/witchghost-1.png'), True, False)]
         pacman_timer = Timer(image_list = pacman, delay = 200)
         ghost1_timer = Timer(image_list= ghost_1, delay = 150)
         ghost2_timer = Timer(image_list= ghost_2, delay = 150)
@@ -61,7 +61,11 @@ class GameController(object):
             self.screen.blit(self.titlescreen, (0,0))
             image = pacman_timer.image()
             self.screen.blit(image, (start_position, SCREENHEIGHT / 2))
-            start_position -= 1
+            self.screen.blit(ghost1_timer.image(), (start_position + 70, SCREENHEIGHT / 2))
+            self.screen.blit(ghost2_timer.image(), (start_position + 140, SCREENHEIGHT / 2))
+            self.screen.blit(ghost3_timer.image(), (start_position + 210, SCREENHEIGHT / 2))
+            self.screen.blit(ghost4_timer.image(), (start_position + 280, SCREENHEIGHT / 2))
+            start_position -= 2
             pygame.display.flip()
             self.check_button()
 
