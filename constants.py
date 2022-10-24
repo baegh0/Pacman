@@ -55,8 +55,14 @@ SPAWN = 3
 #===============================
 SCORETXT = 0
 LEVELTXT = 1
-READYTXT = 2
-PAUSETXT = 3
-GAMEOVERTXT = 4
+HIGHSCORETXT = 2
+
+#===============================
+#            UI TXT
+#===============================
+
+READYTXT = 3
+PAUSETXT = 4
+GAMEOVERTXT = 5
 
 

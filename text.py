@@ -41,10 +41,10 @@ class Text(object):
             screen.blit(self.label, (x, y))
 
 class TextGroup(object):
-    def __init__(self):
+    def __init__(self, high_score):
         self.nextid = 10
         self.alltext = {}
-        self.setupText()
+        self.setupText(high_score)
         self.showText(READYTXT)
 
     def addText(self, text, color, x, y, size, time=None, id=None):
@@ -55,14 +55,16 @@ class TextGroup(object):
     def removeText(self, id):
         self.alltext.pop(id)
         
-    def setupText(self):
+    def setupText(self, high_score):
         size = TILEHEIGHT
         self.alltext[SCORETXT] = Text("0".zfill(8), WHITE, 0, TILEHEIGHT, size)
+        self.alltext[HIGHSCORETXT] = Text(str(high_score).zfill(8), WHITE, 11*TILEWIDTH, 0, size)
         self.alltext[LEVELTXT] = Text(str(1).zfill(3), WHITE, 23*TILEWIDTH, TILEHEIGHT, size)
         self.alltext[READYTXT] = Text("READY!", YELLOW, 11.25*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[PAUSETXT] = Text("PAUSED!", YELLOW, 10.625*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[GAMEOVERTXT] = Text("GAMEOVER!", YELLOW, 10*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.addText("SCORE", WHITE, 0, 0, size)
+        self.addText("HIGH SCORE", WHITE, 11*TILEWIDTH, TILEHEIGHT, size)
         self.addText("LEVEL", WHITE, 23*TILEWIDTH, 0, size)
 
     def update(self, dt):
@@ -86,6 +88,9 @@ class TextGroup(object):
     def updateLevel(self, level):
         self.updateText(LEVELTXT, str(level + 1).zfill(3))
 
+    def updateHighScore(self, high_score):
+         self.updateText(SCORETXT, str(high_score).zfill(8))
+ 
     def updateText(self, id, value):
         if id in self.alltext.keys():
             self.alltext[id].setText(value)

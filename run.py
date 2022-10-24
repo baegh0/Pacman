@@ -37,13 +37,14 @@ class GameController(object):
         self.pause = Pause(True)
         self.lives = 3
         self.score = 0
-        self.textgroup = TextGroup()
+        self.high_score = self.getHighScore()
+        self.textgroup = TextGroup(self.high_score)
         self.lifesprites = LifeIcons(self.lives)
         self.NodeGroup = NodeGroup()
-        # self.sound = Sound(bg_music="sounds/PacManOP.mp3")
+        self.sound = Sound(bg_music="sounds/PacManOP.mp3")
 
     def startScreen(self):
-        # self.sound.startupsfx()
+        self.sound.startupsfx()
         while True:
             self.screen.blit(self.titlescreen, (0,0))
             pygame.display.flip()
@@ -59,7 +60,7 @@ class GameController(object):
                  self.startGame()
 
     def nextLevel(self):
-        # self.sound.levelupsfx()
+        self.sound.levelupsfx()
         self.showEntities()
         self.level += 1
         self.pause.paused = True
@@ -76,6 +77,7 @@ class GameController(object):
         self.startGame()
         self.score = 0
         self.textgroup.updateScore(self.score)
+        self.textgroup.updateScore(self.high_score)
         self.textgroup.updateLevel(self.level)
         self.textgroup.showText(READYTXT)
         self.lifesprites.resetLives(self.lives)
@@ -95,7 +97,8 @@ class GameController(object):
         
 
     def startGame(self):
-        # self.sound.play_bg()
+        self.sound.play_bg()
+        self.high_score = self.getHighScore()
         self.NodeGroup.setPortalPair((0,17), (27,17))
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)
@@ -143,7 +146,32 @@ class GameController(object):
     def updateScore(self, points):
         self.score += points
         self.textgroup.updateScore(self.score)
-
+    
+    def getHighScore(self):
+    # Try to read the high score from a file
+        try:
+            high_score_file = open("high_score.txt", "r")
+            high_score = int(high_score_file.read())
+            high_score_file.close()
+            print("The high score is", high_score)
+        except IOError:
+            # Error reading file, no high score
+            print("There is no high score yet.")
+        except ValueError:
+            # There's a file there, but we don't understand the number.
+            print("I'm confused. Starting with no high score.")
+ 
+        return high_score
+    
+    def saveHighScore(self, new_high_score):
+        try:
+        # Write the file to disk
+            high_score_file = open("high_score.txt", "w")
+            high_score_file.write(str(new_high_score))
+            high_score_file.close()
+        except IOError:
+            # Hm, can't write it.
+            print("Unable to save the high score.")
 
     def checkEvents(self):
         for event in pygame.event.get():
@@ -196,6 +224,9 @@ class GameController(object):
                          if self.lives <= 0:
                              self.textgroup.showText(GAMEOVERTXT)
                              self.sound.gameover()
+                             if self.score > self.high_score:
+                                self.saveHighScore(self.score)
+                                self.textgroup.updateHighScore(self.high_score)
                              self.pause.setPause(pauseTime=3, func=self.restartGame)
                          else:
                              self.pause.setPause(pauseTime=3, func=self.resetLevel)
