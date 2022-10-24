@@ -75,12 +75,6 @@ class GameController(object):
         self.pause.paused = True
         self.fruit = None
         self.startGame()
-        self.score = 0
-        self.textgroup.updateScore(self.score)
-        self.textgroup.updateScore(self.high_score)
-        self.textgroup.updateLevel(self.level)
-        self.textgroup.showText(READYTXT)
-        self.lifesprites.resetLives(self.lives)
 
     def resetLevel(self):
         self.pause.paused = True
@@ -91,8 +85,6 @@ class GameController(object):
 
     def setBackground(self):
         self.screen.blit(self.background, (0, 0))
-
-        
 
     def startGame(self):
         self.sound.play_bg()
