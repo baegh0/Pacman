@@ -39,6 +39,7 @@ class GameController(object):
         self.score = 0
         self.textgroup = TextGroup()
         self.lifesprites = LifeIcons(self.lives)
+        self.NodeGroup = NodeGroup()
         # self.sound = Sound(bg_music="sounds/PacManOP.mp3")
 
     def startScreen(self):
@@ -95,7 +96,6 @@ class GameController(object):
 
     def startGame(self):
         # self.sound.play_bg()
-        self.NodeGroup = NodeGroup()
         self.NodeGroup.setPortalPair((0,17), (27,17))
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)

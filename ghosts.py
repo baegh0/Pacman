@@ -74,7 +74,9 @@ class Blinky(Ghost):
         self.name = BLINKY
         self.image = pygame.image.load(f'images/angelghost-0.png')
         self.image_list = [pygame.image.load(f'images/angelghost-0.png'), pygame.image.load(f'images/angelghost-1.png')]
+        self.invert_image_list = [pygame.image.load(f'images/angelinverted-{n}') for n in range(2)]
         self.timer = Timer(image_list=self.image_list, delay=150)
+        self.timer = Timer(image_list=self.invert_image_list, delay=150)
 
 class Pinky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
@@ -82,8 +84,9 @@ class Pinky(Ghost):
         self.name = PINKY
         self.image = pygame.image.load('images/butterflyghost-0.png')
         self.image_list = [pygame.image.load(f'images/butterflyghost-0.png'), pygame.image.load(f'images/butterflyghost-1.png')]
+        self.invert_image_list = [pygame.image.load(f'images/butterflyinverted-{n}') for n in range(2)]
         self.timer = Timer(image_list=self.image_list, delay=150)
-
+        self.timer = Timer(image_list=self.invert_image_list, delay=150)
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, 0)
@@ -97,8 +100,9 @@ class Inky(Ghost):
         self.name = INKY
         self.image = pygame.image.load('images/witchghost-0.png')
         self.image_list = [pygame.image.load(f'images/witchghost-0.png'), pygame.image.load(f'images/witchghost-1.png')]
+        self.invert_image_list = [pygame.image.load(f'images/witchinverted-{n}') for n in range(2)]
         self.timer = Timer(image_list=self.image_list, delay=150)
-
+        self.timer = Timer(image_list=self.invert_image_list, delay=150)
 
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, TILEHEIGHT*NROWS)
@@ -114,8 +118,9 @@ class Clyde(Ghost):
         self.name = CLYDE
         self.image = pygame.image.load('images/devilghost-0.png')
         self.image_list = [pygame.image.load(f'images/devilghost-0.png'), pygame.image.load(f'images/devilghost-1.png')]
+        self.invert_image_list = [pygame.image.load(f'images/devilinverted-{n}') for n in range(2)]
         self.timer = Timer(image_list=self.image_list, delay=150)
-
+        self.timer = Timer(image_list=self.invert_image_list, delay=150)
 
     def scatter(self):
         self.goal = Vector2(0, TILEHEIGHT*NROWS)
