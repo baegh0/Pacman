@@ -164,11 +164,11 @@ class GhostGroup(object):
                     self.game.NodeGroup.allowHomeAccess(ghost)
                 elif ghost.mode.current is not SPAWN:
                      if self.pacman.alive:
-                         self.game.lives -=  1
+                         self.pacman.lives -=  1
                          self.game.lifesprites.removeImage()
                          self.pacman.die()
                          self.hide()
-                         if self.game.lives <= 0:
+                         if self.pacman.lives <= 0:
                              self.game.textgroup.showText(GAMEOVERTXT)
                              self.game.sound.gameover()
                              if self.game.score > self.game.high_score:
@@ -214,7 +214,3 @@ class GhostGroup(object):
     def render(self, screen):
         for ghost in self:
             ghost.render(screen)
-
-
-
-

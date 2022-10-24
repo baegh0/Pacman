@@ -15,6 +15,7 @@ class Pacman(Entity):
         self.color = YELLOW
         self.direction = LEFT
         self.setBetweenNodes(LEFT)
+        self.lives = 3
         self.alive = True
         self.image = pygame.image.load('images/pumpkinman0.png')
         self.timer = Timer(image_list = self.pumpkin_images, delay=200)
@@ -82,6 +83,4 @@ class Pacman(Entity):
         d = self.position - other.position
         dSquared = d.magnitudeSquared()
         rSquared = (self.collideRadius + other.collideRadius)**2
-        if dSquared <= rSquared:
-            return True
-        return False
+        return dSquared <= rSquared

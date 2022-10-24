@@ -32,43 +32,38 @@ class GameController(object):
         self.screen = pygame.display.set_mode(SCREENSIZE)
         self.background = pygame.image.load('images/game_bg.png')
         self.titlescreen = pygame.image.load('images/bg.png')
+        self.sound = Sound(bg_music="sounds/PacManOP.mp3")
+        self.NodeGroup = NodeGroup()
+        self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
+        self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self)
+        self.pellets = PelletGroup(self)
         self.clock = pygame.time.Clock()
         self.fruit = None
         self.level = 0
         self.pause = Pause(True)
-        self.lives = 3
         self.score = 0
         self.high_score = self.getHighScore()
         self.textgroup = TextGroup(self.high_score)
-        self.lifesprites = LifeIcons(self.lives)
-        self.NodeGroup = NodeGroup()
-        self.sound = Sound(bg_music="sounds/PacManOP.mp3")
-        self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
-        self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self)
-        self.pellets = PelletGroup(self)
+        self.lifesprites = LifeIcons(self.pacman.lives)
 
     def startScreen(self):
         self.sound.startupsfx()
         pacman = [pygame.image.load('images/pumpkinman0.png'), pygame.image.load('images/pumpkinman1.png')]
-        ghost_1 = [pygame.transform.flip(pygame.image.load('images/angelghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/angelghost-1.png'), True, False)]
-        ghost_2 = [pygame.transform.flip(pygame.image.load('images/butterflyghost-0.png'),True, False),pygame.transform.flip(pygame.image.load('images/butterflyghost-1.png'),True, False)]
-        ghost_3 = [pygame.transform.flip(pygame.image.load('images/devilghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/devilghost-1.png'), True, False)]
-        ghost_4 = [pygame.transform.flip(pygame.image.load('images/witchghost-0.png'), True, False), pygame.transform.flip(pygame.image.load('images/witchghost-1.png'), True, False)]
+        ghost_1 = [pygame.transform.flip(pygame.image.load(f'images/angelghost-{n}.png'), True, False) for n in range(2)]
+        ghost_2 = [pygame.transform.flip(pygame.image.load(f'images/butterflyghost-{n}.png'),True, False) for n in range(2)]
+        ghost_3 = [pygame.transform.flip(pygame.image.load(f'images/devilghost-{n}.png'), True, False) for n in range(2)]
+        ghost_4 = [pygame.transform.flip(pygame.image.load(f'images/witchghost-{n}.png'), True, False) for n in range(2)]
+        ghost_list = [ghost_1, ghost_2, ghost_3, ghost_4]
         pacman_timer = Timer(image_list = pacman, delay = 200)
-        ghost1_timer = Timer(image_list= ghost_1, delay = 150)
-        ghost2_timer = Timer(image_list= ghost_2, delay = 150)
-        ghost3_timer = Timer(image_list= ghost_3, delay = 150)
-        ghost4_timer = Timer(image_list= ghost_4, delay = 150)
+        ghost_timer_list = [Timer(image_list=ghost, delay=150) for ghost in ghost_list]
 
         start_position = 672
         while True:
             self.screen.blit(self.titlescreen, (0,0))
             image = pacman_timer.image()
             self.screen.blit(image, (start_position, SCREENHEIGHT / 2))
-            self.screen.blit(ghost1_timer.image(), (start_position + 70, SCREENHEIGHT / 2))
-            self.screen.blit(ghost2_timer.image(), (start_position + 140, SCREENHEIGHT / 2))
-            self.screen.blit(ghost3_timer.image(), (start_position + 210, SCREENHEIGHT / 2))
-            self.screen.blit(ghost4_timer.image(), (start_position + 280, SCREENHEIGHT / 2))
+            for n,timer in enumerate(ghost_timer_list):
+                self.screen.blit(timer.image(), (start_position + 70*n, SCREENHEIGHT / 2))
             start_position -= 2
             pygame.display.flip()
             self.check_button()
@@ -89,12 +84,11 @@ class GameController(object):
         self.showEntities()
         self.level += 1
         self.pause.paused = True
-        self.startGame()
         self.ghosts.SpeedIncrease()
         self.textgroup.updateLevel(self.level)
+        self.startGame()
 
     def restartGame(self):
-        self.lives = 3
         self.ghosts.ResetSpeed()
         self.level = 0
         self.pause.paused = True
@@ -125,14 +119,12 @@ class GameController(object):
         self.ghosts.setSpawnNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
         self.NodeGroup.denyHomeAccess(self.pacman)
         self.NodeGroup.denyHomeAccessList(self.ghosts)
-        self.NodeGroup.denyAccessList(2+11.5, 3+14, LEFT, self.ghosts)
-        self.NodeGroup.denyAccessList(2+11.5, 3+14, RIGHT, self.ghosts)
         self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
-        self.NodeGroup.denyAccessList(12, 14, UP, self.ghosts)
-        self.NodeGroup.denyAccessList(15, 14, UP, self.ghosts)
-        self.NodeGroup.denyAccessList(12, 26, UP, self.ghosts)
-        self.NodeGroup.denyAccessList(15, 26, UP, self.ghosts)
+        for dir in [LEFT, RIGHT]:
+            NodeGroup().denyAccessList(2+11.5, 3+14, dir, self.ghosts)
+        for x, y in [(x, y) for x in X for y in Y]:
+            NodeGroup().denyAccessList(x, y, UP, self.ghosts)
         while True:
             self.setBackground()
             self.update()
