@@ -30,7 +30,8 @@ class PowerPellet(Pellet):
         self.points = 100
         self.flashTime = 0.2
         self.timer= 0
-        self.position = Vector2(column * TILEWIDTH - 20, row * TILEHEIGHT - 15)
+        self.collideRadius = int(13 * TILEWIDTH / 16)
+        self.position = Vector2(column * TILEWIDTH - 15, row * TILEHEIGHT - 15)
         
     def update(self, dt):
         self.timer += dt

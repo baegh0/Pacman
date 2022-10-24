@@ -31,7 +31,7 @@ class Node(object):
 class NodeGroup(object):
     def __init__(self):
         self.nodesList = {}
-        self.nodeSymbols = ['+', 'p']
+        self.nodeSymbols = ['+', 'P']
         self.pathSymbols = ['.']
         self.mazeData = self.openMaze("maze.txt")
         self.createNodeGraph(self.mazeData)

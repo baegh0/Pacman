@@ -226,6 +226,7 @@ class GameController(object):
 
     def checkPelletEvents(self):
         pellet = self.pacman.eatPellets(self.pellets.pelletList)
+        pp = self.pacman.eatPellets(self.pellets.powerpellets)
         if pellet:
             self.pellets.numEaten += 1
             self.updateScore(pellet.points)
@@ -234,8 +235,9 @@ class GameController(object):
             if self.pellets.numEaten == 70:
                 self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
             self.pellets.pelletList.remove(pellet)
-            if pellet.name == POWERPELLET:
+            if pp:
                 self.ghosts.startFreight()
+                self.pellets.powerpellets.remove(pp)
             if self.pellets.isEmpty():
                 self.hideEntities()
                 self.pause.setPause(pauseTime=3, func=self.nextLevel)
