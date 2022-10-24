@@ -44,7 +44,13 @@ class GameController(object):
         self.score = 0
         self.high_score = self.getHighScore()
         self.textgroup = TextGroup(self.high_score)
+<<<<<<< HEAD:run.py
         self.lifesprites = LifeIcons(self.pacman.lives)
+=======
+        self.lifesprites = LifeIcons(self.lives)
+        self.NodeGroup = NodeGroup()
+        self.sound = Sound(bg_music="sounds/PacManOP.mp3")
+>>>>>>> e2c5edd7ef8cf79e866648218b5aca801c9ac439:game.py
 
     def startScreen(self):
         self.sound.startupsfx()
@@ -112,19 +118,33 @@ class GameController(object):
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)
         self.NodeGroup.connectHomeNodes(homekey, (15,14), RIGHT)
-        self.ghosts.blinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
-        self.ghosts.pinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
-        self.ghosts.inky.setStartNode(self.NodeGroup.getNodeFromTiles(0+11.5, 3+14))
-        self.ghosts.clyde.setStartNode(self.NodeGroup.getNodeFromTiles(4+11.5, 3+14))
+        self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
+        self.pellets = PelletGroup()
+        self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self.pacman)
+        self.ghosts.angel.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
+        self.ghosts.butterfly.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
+        self.ghosts.witch.setStartNode(self.NodeGroup.getNodeFromTiles(0+11.5, 3+14))
+        self.ghosts.devil.setStartNode(self.NodeGroup.getNodeFromTiles(4+11.5, 3+14))
         self.ghosts.setSpawnNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
         self.NodeGroup.denyHomeAccess(self.pacman)
         self.NodeGroup.denyHomeAccessList(self.ghosts)
+<<<<<<< HEAD:run.py
         self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         for dir in [LEFT, RIGHT]:
             NodeGroup().denyAccessList(2+11.5, 3+14, dir, self.ghosts)
         for x, y in [(x, y) for x in X for y in Y]:
             NodeGroup().denyAccessList(x, y, UP, self.ghosts)
+=======
+        self.NodeGroup.denyAccessList(2+11.5, 3+14, LEFT, self.ghosts)
+        self.NodeGroup.denyAccessList(2+11.5, 3+14, RIGHT, self.ghosts)
+        self.ghosts.witch.startNode.denyAccess(RIGHT, self.ghosts.witch)
+        self.ghosts.devil.startNode.denyAccess(LEFT, self.ghosts.devil)
+        self.NodeGroup.denyAccessList(12, 14, UP, self.ghosts)
+        self.NodeGroup.denyAccessList(15, 14, UP, self.ghosts)
+        self.NodeGroup.denyAccessList(12, 26, UP, self.ghosts)
+        self.NodeGroup.denyAccessList(15, 26, UP, self.ghosts)
+>>>>>>> e2c5edd7ef8cf79e866648218b5aca801c9ac439:game.py
         while True:
             self.setBackground()
             self.update()
@@ -138,14 +158,14 @@ class GameController(object):
             self.ghosts.update(dt)        
             if self.fruit is not None:
                 self.fruit.update(dt)
-            self.pellets.checkPelletEvents()
-            self.ghosts.checkGhostEvents()
+            self.checkPelletEvents()
+            self.checkGhostEvents()
             self.checkFruitEvents()
         afterPauseMethod = self.pause.update(dt)
         if afterPauseMethod is not None:
             afterPauseMethod()
         self.checkEvents()
-        self.render()
+        self.draw()
 
     def updateScore(self, points):
         self.score += points
@@ -192,18 +212,50 @@ class GameController(object):
                             self.textgroup.showText(PAUSETXT)
                             self.hideEntities()
 
-    def render(self):
+    def draw(self):
         self.ghosts.render(self.screen)
-        self.pacman.render(self.screen)
-        self.pellets.render(self.screen)
+        self.pacman.draw(self.screen)
+        self.pellets.draw(self.screen)
         if self.fruit is not None:
-            self.fruit.render(self.screen)
-        self.textgroup.render(self.screen)
+            self.fruit.draw(self.screen)
+        self.textgroup.draw(self.screen)
         for i in range(len(self.lifesprites.images)):
             x = self.lifesprites.images[i].get_width() * i
             y = SCREENHEIGHT - self.lifesprites.images[i].get_height()
             self.screen.blit(self.lifesprites.images[i], (x, y))
         pygame.display.update()
+
+    def checkGhostEvents(self):
+       for ghost in self.ghosts:
+            if self.pacman.collideGhost(ghost):
+                if ghost.mode.current is FREIGHT:
+                    self.pacman.visible = False
+                    ghost.visible = False
+                    self.sound.runningawaysfx()
+                    self.updateScore(ghost.points)
+                    self.textgroup.addText(str(ghost.points), 
+                                            WHITE, ghost.position.x, ghost.position.y, 8, time=1)
+                    self.ghosts.updatePoints()
+                    self.pause.setPause(pauseTime=1, func=self.showEntities)
+                    ghost.startSpawn()
+                    self.NodeGroup.allowHomeAccess(ghost)
+                elif ghost.mode.current is not SPAWN:
+                     if self.pacman.alive:
+                         self.lives -=  1
+                         self.lifesprites.removeImage()
+                         self.pacman.die()
+                         self.ghosts.hide()
+                         if self.lives <= 0:
+                             self.textgroup.showText(GAMEOVERTXT)
+                             self.sound.gameover()
+                             if self.score > self.high_score:
+                                self.saveHighScore(self.score)
+                                self.textgroup.updateHighScore(self.high_score)
+                             self.pause.setPause(pauseTime=3, func=self.restartGame)
+                         else:
+                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
+
+
 
     def showEntities(self):
         self.pacman.visible = True
@@ -226,6 +278,24 @@ class GameController(object):
                 self.fruit = None
             elif self.fruit.destroy:
                 self.fruit = None
+
+    def checkPelletEvents(self):
+        pellet = self.pacman.eatPellets(self.pellets.pelletList)
+        pp = self.pacman.eatPellets(self.pellets.powerpellets)
+        if pellet:
+            self.pellets.numEaten += 1
+            self.updateScore(pellet.points)
+            if self.pellets.numEaten == 30:
+                self.ghosts.witch.startNode.allowAccess(RIGHT, self.ghosts.witch)
+            if self.pellets.numEaten == 70:
+                self.ghosts.devil.startNode.allowAccess(LEFT, self.ghosts.devil)
+            self.pellets.pelletList.remove(pellet)
+            if pp:
+                self.ghosts.startFreight()
+                self.pellets.powerpellets.remove(pp)
+            if self.pellets.isEmpty():
+                self.hideEntities()
+                self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
 if __name__ == "__main__":
     game = GameController()

@@ -21,7 +21,7 @@ class Pacman(Entity):
         self.timer = Timer(image_list = self.pumpkin_images, delay=200)
         self.timer_flip = Timer(image_list=self.flip_pumpkin_images, delay=200)
 
-    def render(self, screen):
+    def draw(self, screen):
         image = self.timer_flip.image() if self.direction == RIGHT else self.timer.image()
         adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
         p = self.position - adjust
@@ -56,7 +56,7 @@ class Pacman(Entity):
         else: 
             if self.oppositeDirection(direction):
                 self.reverseDirection()
-        self.render(screen)
+        self.draw(screen)
 
     def getValidKey(self):
         key_pressed = pygame.key.get_pressed()

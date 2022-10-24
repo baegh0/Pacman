@@ -35,7 +35,7 @@ class Text(object):
                 self.lifespan = None
                 self.destroy = True
 
-    def render(self, screen):
+    def draw(self, screen):
         if self.visible:
             x, y = self.position.asTuple()
             screen.blit(self.label, (x, y))
@@ -95,6 +95,6 @@ class TextGroup(object):
         if id in self.alltext.keys():
             self.alltext[id].setText(value)
 
-    def render(self, screen):
+    def draw(self, screen):
         for tkey in list(self.alltext.keys()):
             self.alltext[tkey].render(screen)

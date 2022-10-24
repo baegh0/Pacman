@@ -11,7 +11,7 @@ class Node(object):
                             LEFT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
                             RIGHT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT]}
 
-    def render(self, screen):
+    def draw(self, screen):
         for n in self.neighbors.keys():
             if self.neighbors[n] is not None:
                 line_start = self.position.asTuple()
@@ -65,7 +65,7 @@ class NodeGroup(object):
                 new[col][row] = data[row][col]
         return new
 
-    def render(self, screen):
+    def draw(self, screen):
         for node in self.nodesList.values():
             node.render(screen)
 

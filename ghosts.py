@@ -32,7 +32,7 @@ class Ghost(Entity):
             self.chase()
         Entity.update(self, dt)
 
-    def render(self, screen):
+    def draw(self, screen):
         img_list = self.invert_image_list if self.mode.current == FREIGHT else self.image_list
         self.timer = Timer(image_list=img_list, delay=150)
         image = self.timer.image()
@@ -128,13 +128,11 @@ class Clyde(Ghost):
             self.goal = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
 
 class GhostGroup(object):
-    def __init__(self, node, game):
-        self.game = game
-        self.pacman = game.pacman
-        self.blinky = Blinky(node, self.pacman)
-        self.pinky = Pinky(node, self.pacman)
-        self.inky = Inky(node, self.pacman, self.blinky)
-        self.clyde = Clyde(node, self.pacman)
+    def __init__(self, node, pacman):
+        self.blinky = Blinky(node, pacman)
+        self.pinky = Pinky(node, pacman)
+        self.inky = Inky(node, pacman, self.blinky)
+        self.clyde = Clyde(node, pacman)
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
     def __iter__(self):
@@ -146,7 +144,7 @@ class GhostGroup(object):
 
     def ResetSpeed(self):
         self.speed = 100
-        print(f'Speed has been set back to {self.speed}')
+        print(f'Speed has been set back to {self.speed}') 
 
     def checkGhostEvents(self):
        for ghost in self.ghosts:
@@ -164,11 +162,11 @@ class GhostGroup(object):
                     self.game.NodeGroup.allowHomeAccess(ghost)
                 elif ghost.mode.current is not SPAWN:
                      if self.pacman.alive:
-                         self.pacman.lives -=  1
+                         self.game.lives -=  1
                          self.game.lifesprites.removeImage()
                          self.pacman.die()
                          self.hide()
-                         if self.pacman.lives <= 0:
+                         if self.game.lives <= 0:
                              self.game.textgroup.showText(GAMEOVERTXT)
                              self.game.sound.gameover()
                              if self.game.score > self.game.high_score:

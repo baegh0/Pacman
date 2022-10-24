@@ -3,7 +3,7 @@ from constants import *
 class MainMode(object):
     def __init__(self):
         self.timer = 0
-        self.scatter()
+        self.runaway()
 
     def update(self, dt):
         self.timer += dt
@@ -11,9 +11,9 @@ class MainMode(object):
             if self.mode is SCATTER:
                 self.chase()
             elif self.mode is CHASE:
-                self.scatter()
+                self.runaway()
 
-    def scatter(self):
+    def runaway(self):
         self.mode = SCATTER
         self.time = 7
         self.timer = 0

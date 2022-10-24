@@ -115,7 +115,7 @@ class Entity(object):
     def setSpeed(self, speed):
         self.speed = speed * TILEWIDTH / 16
 
-    def render(self, screen):
+    def draw(self, screen):
         if self.visible:
             if self.image is not None:
                 adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
