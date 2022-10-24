@@ -6,12 +6,12 @@ class Node(object):
     def __init__(self, x, y):
         self.position = Vector2(x, y)
         self.neighbors = {UP:None, DOWN:None, LEFT:None, RIGHT:None, PORTAL: None}
-        self.access = {UP:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
-                            DOWN:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
-                            LEFT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
-                            RIGHT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT]}
+        self.access = {UP:[PACMAN, ANGEL, BUTTERFLY, WITCH, DEVIL, FRUIT],
+                            DOWN:[PACMAN, ANGEL, BUTTERFLY, WITCH, DEVIL, FRUIT],
+                            LEFT:[PACMAN, ANGEL, BUTTERFLY, WITCH, DEVIL, FRUIT],
+                            RIGHT:[PACMAN, ANGEL, BUTTERFLY, WITCH, DEVIL, FRUIT]}
 
-    def render(self, screen):
+    def draw(self, screen):
         for n in self.neighbors.keys():
             if self.neighbors[n] is not None:
                 line_start = self.position.asTuple()
@@ -65,7 +65,7 @@ class NodeGroup(object):
                 new[col][row] = data[row][col]
         return new
 
-    def render(self, screen):
+    def draw(self, screen):
         for node in self.nodesList.values():
             node.render(screen)
 

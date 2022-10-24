@@ -3,18 +3,18 @@ from constants import *
 class MainMode(object):
     def __init__(self):
         self.timer = 0
-        self.scatter()
+        self.runaway()
 
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.time:
-            if self.mode is SCATTER:
+            if self.mode is RUNAWAY:
                 self.chase()
             elif self.mode is CHASE:
-                self.scatter()
+                self.runaway()
 
-    def scatter(self):
-        self.mode = SCATTER
+    def runaway(self):
+        self.mode = RUNAWAY
         self.time = 7
         self.timer = 0
 
@@ -39,7 +39,7 @@ class ModeController(object):
                 self.time = None
                 self.entity.normalMode()
                 self.current = self.mainmode.mode	
-        elif self.current in [SCATTER, CHASE]:
+        elif self.current in [RUNAWAY, CHASE]:
             self.current = self.mainmode.mode
         if self.current is SPAWN:
             if self.entity.node == self.entity.spawnNode:
@@ -53,7 +53,7 @@ class ModeController(object):
             self.current = self.mainmode.mode
 
     def setFreightMode(self):
-        if self.current in [SCATTER, CHASE]:
+        if self.current in [RUNAWAY, CHASE]:
             self.timer = 0
             self.time = 7
             self.current = FREIGHT

@@ -118,17 +118,17 @@ class GameController(object):
         self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
         self.pellets = PelletGroup()
         self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self.pacman)
-        self.ghosts.blinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
-        self.ghosts.pinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
-        self.ghosts.inky.setStartNode(self.NodeGroup.getNodeFromTiles(0+11.5, 3+14))
-        self.ghosts.clyde.setStartNode(self.NodeGroup.getNodeFromTiles(4+11.5, 3+14))
+        self.ghosts.angel.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
+        self.ghosts.butterfly.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
+        self.ghosts.witch.setStartNode(self.NodeGroup.getNodeFromTiles(0+11.5, 3+14))
+        self.ghosts.devil.setStartNode(self.NodeGroup.getNodeFromTiles(4+11.5, 3+14))
         self.ghosts.setSpawnNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
         self.NodeGroup.denyHomeAccess(self.pacman)
         self.NodeGroup.denyHomeAccessList(self.ghosts)
         self.NodeGroup.denyAccessList(2+11.5, 3+14, LEFT, self.ghosts)
         self.NodeGroup.denyAccessList(2+11.5, 3+14, RIGHT, self.ghosts)
-        self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
-        self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
+        self.ghosts.witch.startNode.denyAccess(RIGHT, self.ghosts.witch)
+        self.ghosts.devil.startNode.denyAccess(LEFT, self.ghosts.devil)
         self.NodeGroup.denyAccessList(12, 14, UP, self.ghosts)
         self.NodeGroup.denyAccessList(15, 14, UP, self.ghosts)
         self.NodeGroup.denyAccessList(12, 26, UP, self.ghosts)
@@ -153,7 +153,7 @@ class GameController(object):
         if afterPauseMethod is not None:
             afterPauseMethod()
         self.checkEvents()
-        self.render()
+        self.draw()
 
     def updateScore(self, points):
         self.score += points
@@ -200,13 +200,13 @@ class GameController(object):
                             self.textgroup.showText(PAUSETXT)
                             self.hideEntities()
 
-    def render(self):
+    def draw(self):
         self.ghosts.render(self.screen)
-        self.pacman.render(self.screen)
-        self.pellets.render(self.screen)
+        self.pacman.draw(self.screen)
+        self.pellets.draw(self.screen)
         if self.fruit is not None:
-            self.fruit.render(self.screen)
-        self.textgroup.render(self.screen)
+            self.fruit.draw(self.screen)
+        self.textgroup.draw(self.screen)
         for i in range(len(self.lifesprites.images)):
             x = self.lifesprites.images[i].get_width() * i
             y = SCREENHEIGHT - self.lifesprites.images[i].get_height()
@@ -274,9 +274,9 @@ class GameController(object):
             self.pellets.numEaten += 1
             self.updateScore(pellet.points)
             if self.pellets.numEaten == 30:
-                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
+                self.ghosts.witch.startNode.allowAccess(RIGHT, self.ghosts.witch)
             if self.pellets.numEaten == 70:
-                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
+                self.ghosts.devil.startNode.allowAccess(LEFT, self.ghosts.devil)
             self.pellets.pelletList.remove(pellet)
             if pp:
                 self.ghosts.startFreight()

@@ -14,7 +14,7 @@ class Pellet(object):
         self.points = 10
         self.visible = True
         
-    def render(self, screen):
+    def draw(self, screen):
         if self.visible:
             adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
             p = self.position + adjust
@@ -39,7 +39,7 @@ class PowerPellet(Pellet):
             self.visible = not self.visible
             self.timer = 0
     
-    def render(self, screen):
+    def draw(self, screen):
         if self.visible:
             pos = self.position.asInt()
             screen.blit(self.image, pos)
@@ -74,7 +74,7 @@ class PelletGroup(object):
             return True
         return False
     
-    def render(self, screen):
+    def draw(self, screen):
         for pellet in self.pelletList:
             pellet.render(screen)
 

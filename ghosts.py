@@ -26,13 +26,13 @@ class Ghost(Entity):
 
     def update(self, dt):
         self.mode.update(dt)
-        if self.mode.current is SCATTER:
+        if self.mode.current is RUNAWAY:
             self.scatter()
         elif self.mode.current is CHASE:
             self.chase()
         Entity.update(self, dt)
 
-    def render(self, screen):
+    def draw(self, screen):
         img_list = self.invert_image_list if self.mode.current == FREIGHT else self.image_list
         self.timer = Timer(image_list=img_list, delay=150)
         image = self.timer.image()
@@ -70,18 +70,18 @@ class Ghost(Entity):
         self.directionMethod = self.goalDirection
         self.homeNode.denyAccess(DOWN, self)
 
-class Blinky(Ghost):
-    def __init__(self, node, pacman=None, blinky=None):
-        Ghost.__init__(self, node, pacman, blinky)
-        self.name = BLINKY
+class Angel(Ghost):
+    def __init__(self, node, pacman=None, ghost=None):
+        Ghost.__init__(self, node, pacman, ghost)
+        self.name = ANGEL
         self.image = pygame.image.load(f'images/angelghost-0.png')
         self.image_list = [pygame.image.load(f'images/angelghost-0.png'), pygame.image.load(f'images/angelghost-1.png')]
         self.invert_image_list = [pygame.image.load(f'images/angelinverted-{n}.png') for n in range(2)]
 
-class Pinky(Ghost):
-    def __init__(self, node, pacman=None, blinky=None):
-        Ghost.__init__(self, node, pacman, blinky)
-        self.name = PINKY
+class Butterfly(Ghost):
+    def __init__(self, node, pacman=None, ghost=None):
+        Ghost.__init__(self, node, pacman, ghost)
+        self.name = BUTTERFLY
         self.image = pygame.image.load('images/butterflyghost-0.png')
         self.image_list = [pygame.image.load(f'images/butterflyghost-0.png'), pygame.image.load(f'images/butterflyghost-1.png')]
         self.invert_image_list = [pygame.image.load(f'images/butterflyinverted-{n}.png') for n in range(2)]
@@ -92,10 +92,10 @@ class Pinky(Ghost):
     def chase(self):
         self.goal = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
 
-class Inky(Ghost):
-    def __init__(self, node, pacman=None, blinky=None):
-        Ghost.__init__(self, node, pacman, blinky)
-        self.name = INKY
+class Witch(Ghost):
+    def __init__(self, node, pacman=None, ghost=None):
+        Ghost.__init__(self, node, pacman, ghost)
+        self.name = WITCH
         self.image = pygame.image.load('images/witchghost-0.png')
         self.image_list = [pygame.image.load(f'images/witchghost-0.png'), pygame.image.load(f'images/witchghost-1.png')]
         self.invert_image_list = [pygame.image.load(f'images/witchinverted-{n}.png') for n in range(2)]
@@ -108,10 +108,10 @@ class Inky(Ghost):
         vec2 = (vec1 - self.blinky.position) * 2
         self.goal = self.blinky.position + vec2
 
-class Clyde(Ghost):
-    def __init__(self, node, pacman=None, blinky=None):
-        Ghost.__init__(self, node, pacman, blinky)
-        self.name = CLYDE
+class Devil(Ghost):
+    def __init__(self, node, pacman=None, ghost=None):
+        Ghost.__init__(self, node, pacman, ghost)
+        self.name = DEVIL
         self.image = pygame.image.load('images/devilghost-0.png')
         self.image_list = [pygame.image.load(f'images/devilghost-0.png'), pygame.image.load(f'images/devilghost-1.png')]
         self.invert_image_list = [pygame.image.load(f'images/devilinverted-{n}.png') for n in range(2)]
@@ -129,11 +129,11 @@ class Clyde(Ghost):
 
 class GhostGroup(object):
     def __init__(self, node, pacman):
-        self.blinky = Blinky(node, pacman)
-        self.pinky = Pinky(node, pacman)
-        self.inky = Inky(node, pacman, self.blinky)
-        self.clyde = Clyde(node, pacman)
-        self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
+        self.angel = Angel(node, pacman)
+        self.butterfly = Butterfly(node, pacman)
+        self.witch = Witch(node, pacman, self.angel)
+        self.devil = Devil(node, pacman)
+        self.ghosts = [self.angel, self.butterfly, self.witch, self.devil]
 
     def __iter__(self):
         return iter(self.ghosts)
