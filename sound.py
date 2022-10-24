@@ -21,7 +21,7 @@ class Sound:
     def stop_bg(self):
         pg.mixer.music.stop()
 
-    def eatingsfx(self): pg.mixer.Sound.play(self.sounds['laser'],)
+    def eatingsfx(self): pg.mixer.Sound.play(self.sounds['eating'],)
     def startupsfx(self): pg.mixer.Sound.play(self.sounds['startup'])
     def runningawaysfx(self): pg.mixer.Sound.play(self.sounds['runningaway'])
     def levelupsfx(self): pg.mixer.Sound.play(self.sounds['levelup'])
