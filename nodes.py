@@ -29,11 +29,11 @@ class Node(object):
 
 
 class NodeGroup(object):
-    def __init__(self, maze):
+    def __init__(self):
         self.nodesList = {}
         self.nodeSymbols = ['+', 'p']
         self.pathSymbols = ['.']
-        self.mazeData = self.openMaze(maze)
+        self.mazeData = self.openMaze("maze.txt")
         self.createNodeGraph(self.mazeData)
         self.connectHorizontal(self.mazeData)
         self.connectVertical(self.mazeData)
@@ -64,9 +64,6 @@ class NodeGroup(object):
             for col in range(len(data[row])):
                 new[col][row] = data[row][col]
         return new
-
-    def readMazeFile(self, textfile):
-        return np.loadtxt(textfile, dtype='<U1')
 
     def render(self, screen):
         for node in self.nodesList.values():

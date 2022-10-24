@@ -7,6 +7,8 @@ from timer import Timer
 
 class Pacman(Entity):
     pumpkin_images = [pygame.image.load(f'images/pumpkinman0.png'), pygame.image.load(f'images/pumpkinman1.png')]
+    flip_pumpkin_images = [pygame.transform.flip(pygame.image.load(f'images/pumpkinman{n}.png'), True, False) for n in range(2)]
+
     def __init__(self, node):
         Entity.__init__(self, node )
         self.name = PACMAN    
@@ -16,9 +18,10 @@ class Pacman(Entity):
         self.alive = True
         self.image = pygame.image.load('images/pumpkinman0.png')
         self.timer = Timer(image_list = self.pumpkin_images, delay=200)
+        self.timer_flip = Timer(image_list=self.flip_pumpkin_images, delay=200)
 
-    def render(self,screen):
-        image = self.timer.image()
+    def render(self, screen):
+        image = self.timer_flip.image() if self.direction == RIGHT else self.timer.image()
         adjust = Vector2(TILEWIDTH, TILEHEIGHT) / 2
         p = self.position - adjust
         screen.blit(image, p.asTuple())
@@ -33,7 +36,7 @@ class Pacman(Entity):
         self.alive = False
         self.direction = STOP
 
-    def update(self, dt):	
+    def update(self, dt, screen):	
         self.position += self.directions[self.direction]*self.speed*dt
         direction = self.getValidKey()
         if self.overshotTarget():
@@ -52,6 +55,7 @@ class Pacman(Entity):
         else: 
             if self.oppositeDirection(direction):
                 self.reverseDirection()
+        self.render(screen)
 
     def getValidKey(self):
         key_pressed = pygame.key.get_pressed()

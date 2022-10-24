@@ -1,13 +1,14 @@
 import pygame
 from vector import Vector2
+from random import randint
 from constants import *
-import numpy as np
+from nodes import NodeGroup
 
 class Pellet(object):
     def __init__(self, row, column):
         self.name = PELLET
         self.position = Vector2(column*TILEWIDTH, row*TILEHEIGHT)
-        self.color = list(np.random.choice(range(256), size=3)) #(randrange(216,243),randrange(216,243),randrange(216,243)) # will generate a random color for pellets
+        self.color = list(randint(0, 255) for _ in range(3)) # will generate a random color for pellets
         self.radius = int(2 * TILEWIDTH / 16)
         self.collideRadius = int(2 * TILEWIDTH / 16)
         self.points = 10
@@ -25,41 +26,47 @@ class PowerPellet(Pellet):
     def __init__(self, row, column):
         Pellet.__init__(self, row, column)
         self.name = POWERPELLET
-        self.radius = int(8 * TILEWIDTH / 16)
-        self.points = 50
+        self.image = pygame.image.load('images/chocolate_bars-0.png')
+        self.points = 100
         self.flashTime = 0.2
         self.timer= 0
+        self.position = Vector2(column * TILEWIDTH - 20, row * TILEHEIGHT - 15)
         
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.flashTime:
             self.visible = not self.visible
             self.timer = 0
+    
+    def render(self, screen):
+        if self.visible:
+            pos = self.position.asInt()
+            screen.blit(self.image, pos)
 
 class PelletGroup(object):
-    def __init__(self, pelletfile):
+    def __init__(self):
         self.pelletList = []
         self.powerpellets = []
-        self.createPelletList(pelletfile)
+        self.pelletFile = self.readPelletfile()
+        self.createPelletList()
         self.numEaten = 0
 
     def update(self, dt):
         for powerpellet in self.powerpellets:
             powerpellet.update(dt)
                 
-    def createPelletList(self, pelletfile):
-        data = self.readPelletfile(pelletfile)        
-        for row in range(data.shape[0]):
-            for col in range(data.shape[1]):
-                if data[row][col] in ['.', '+']:
+    def createPelletList(self):     
+        for row in range(len(self.pelletFile)):
+            for col in range(len(self.pelletFile[row])):
+                if self.pelletFile[row][col] in ['.', '+']:
                     self.pelletList.append(Pellet(row, col))
-                elif data[row][col] in ['P', 'p']:
+                elif self.pelletFile[row][col] in ['P', 'p']:
                     pp = PowerPellet(row, col)
                     self.pelletList.append(pp)
                     self.powerpellets.append(pp)
                     
-    def readPelletfile(self, textfile):
-        return np.loadtxt(textfile, dtype='<U1')
+    def readPelletfile(self):
+        return NodeGroup().mazeData
     
     def isEmpty(self):
         if len(self.pelletList) == 0:

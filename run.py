@@ -89,19 +89,19 @@ class GameController(object):
     def setBackground(self):
         self.background = pygame.surface.Surface(SCREENSIZE).convert()
         self.background.fill(BLACK)
+        self.screen.blit(self.background, (0, 0))
 
         
 
     def startGame(self):
-        self.setBackground()
         # self.sound.play_bg()
-        self.NodeGroup = NodeGroup("maze.txt")
+        self.NodeGroup = NodeGroup()
         self.NodeGroup.setPortalPair((0,17), (27,17))
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)
         self.NodeGroup.connectHomeNodes(homekey, (15,14), RIGHT)
         self.pacman = Pacman(self.NodeGroup.getNodeFromTiles(15, 26))
-        self.pellets = PelletGroup("maze.txt")
+        self.pellets = PelletGroup()
         self.ghosts = GhostGroup(self.NodeGroup.getStartTempNode(), self.pacman)
         self.ghosts.blinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 0+14))
         self.ghosts.pinky.setStartNode(self.NodeGroup.getNodeFromTiles(2+11.5, 3+14))
@@ -119,6 +119,7 @@ class GameController(object):
         self.NodeGroup.denyAccessList(12, 26, UP, self.ghosts)
         self.NodeGroup.denyAccessList(15, 26, UP, self.ghosts)
         while True:
+            self.setBackground()
             self.update()
 
     def update(self):
@@ -126,7 +127,7 @@ class GameController(object):
         self.textgroup.update(dt)    
         self.pellets.update(dt)
         if not self.pause.paused:
-            self.pacman.update(dt)
+            self.pacman.update(dt, self.screen)
             self.ghosts.update(dt)        
             if self.fruit is not None:
                 self.fruit.update(dt)
@@ -160,12 +161,11 @@ class GameController(object):
                             self.hideEntities()
 
     def render(self):
-        self.screen.blit(self.background, (0, 0))
         self.ghosts.render(self.screen)
+        self.pacman.render(self.screen)
         self.pellets.render(self.screen)
         if self.fruit is not None:
             self.fruit.render(self.screen)
-        self.pacman.render(self.screen)
         self.textgroup.render(self.screen)
         for i in range(len(self.lifesprites.images)):
             x = self.lifesprites.images[i].get_width() * i
