@@ -26,11 +26,11 @@ class Node:
                 pg.draw.circle(screen, setting.RED, self.position.pos(), 4)
 
 class Nodes(object):
-    def __init__(self, maze):
+    def __init__(self):
         self.nodesLIST = {}
         self.nodeSymbols = ['+', 'p']
         self.pathSymbols = ['.']
-        self.mazeData = self.openMaze(maze)
+        self.mazeData = self.openMaze("maze.txt")
         self.createNodeGraph(self.mazeData)
         self.connectHorizontal(self.mazeData)
         self.connectVertical(self.mazeData)
