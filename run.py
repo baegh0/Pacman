@@ -40,10 +40,10 @@ class GameController(object):
         self.textgroup = TextGroup()
         self.lifesprites = LifeIcons(self.lives)
         self.NodeGroup = NodeGroup()
-        # self.sound = Sound(bg_music="sounds/PacManOP.mp3")
+        self.sound = Sound(bg_music="sounds/PacManOP.mp3")
 
     def startScreen(self):
-        # self.sound.startupsfx()
+        self.sound.startupsfx()
         while True:
             self.screen.blit(self.titlescreen, (0,0))
             pygame.display.flip()
@@ -59,7 +59,7 @@ class GameController(object):
                  self.startGame()
 
     def nextLevel(self):
-        # self.sound.levelupsfx()
+        self.sound.levelupsfx()
         self.showEntities()
         self.level += 1
         self.pause.paused = True
@@ -95,7 +95,7 @@ class GameController(object):
         
 
     def startGame(self):
-        # self.sound.play_bg()
+        self.sound.play_bg()
         self.NodeGroup.setPortalPair((0,17), (27,17))
         homekey = self.NodeGroup.createHomeNodes(11.5, 14)
         self.NodeGroup.connectHomeNodes(homekey, (12,14), LEFT)
