@@ -36,16 +36,16 @@ GHOST = 3
 PORTAL = 3
 PELLET = 1
 POWERPELLET = 2
-ANGEL = 4
-BUTTERFLY = 5
-WITCH = 6
-DEVIL = 7
+BLINKY = 4
+PINKY = 5
+INKY = 6
+CLYDE = 7
 FRUIT = 8
 
 #===============================
 #            Modes
 #===============================
-RUNAWAY = 0
+SCATTER = 0
 CHASE = 1
 FREIGHT = 2
 SPAWN = 3

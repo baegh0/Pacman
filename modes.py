@@ -8,13 +8,13 @@ class MainMode(object):
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.time:
-            if self.mode is RUNAWAY:
+            if self.mode is SCATTER:
                 self.chase()
             elif self.mode is CHASE:
                 self.runaway()
 
     def runaway(self):
-        self.mode = RUNAWAY
+        self.mode = SCATTER
         self.time = 7
         self.timer = 0
 
@@ -39,7 +39,7 @@ class ModeController(object):
                 self.time = None
                 self.entity.normalMode()
                 self.current = self.mainmode.mode	
-        elif self.current in [RUNAWAY, CHASE]:
+        elif self.current in [SCATTER, CHASE]:
             self.current = self.mainmode.mode
         if self.current is SPAWN:
             if self.entity.node == self.entity.spawnNode:
@@ -53,7 +53,7 @@ class ModeController(object):
             self.current = self.mainmode.mode
 
     def setFreightMode(self):
-        if self.current in [RUNAWAY, CHASE]:
+        if self.current in [SCATTER, CHASE]:
             self.timer = 0
             self.time = 7
             self.current = FREIGHT
