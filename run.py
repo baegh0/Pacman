@@ -5,11 +5,12 @@ from constants import *
 from pacman import Pacman
 from nodes import NodeGroup
 from pellets import PelletGroup
-from ghosts import GhostGroup
+from ghosts import *
 from fruit import Fruit
 from pause import Pause
 from text import TextGroup
 from sound import Sound
+from timer import Timer
 
 class LifeIcons(object):
     def __init__(self, numlives) -> None:
@@ -44,10 +45,27 @@ class GameController(object):
 
     def startScreen(self):
         self.sound.startupsfx()
+        pacman = [pygame.image.load('images/pumpkinman0.png'), pygame.image.load('images/pumpkinman1.png')]
+        ghost_1 = [pygame.image.load('images/angelghost-0.png'), pygame.image.load('images/angelghost-1.png')]
+        ghost_2 = [pygame.image.load('images/butterflyghost-0.png'), pygame.image.load('images/butterflyghost-1.png')]
+        ghost_3 = [pygame.image.load('images/devilghost-0.png'), pygame.image.load('images/devilghost-1.png')]
+        ghost_4 = [pygame.image.load('images/witchghost-0.png'), pygame.image.load('images/witchghost-1.png')]
+        pacman_timer = Timer(image_list = pacman, delay = 200)
+        ghost1_timer = Timer(image_list= ghost_1, delay = 150)
+        ghost2_timer = Timer(image_list= ghost_2, delay = 150)
+        ghost3_timer = Timer(image_list= ghost_3, delay = 150)
+        ghost4_timer = Timer(image_list= ghost_4, delay = 150)
+
+        start_position = 672
         while True:
             self.screen.blit(self.titlescreen, (0,0))
+            image = pacman_timer.image()
+            self.screen.blit(image, (start_position, SCREENHEIGHT / 2))
+            start_position -= 1
             pygame.display.flip()
             self.check_button()
+
+
 
     # Checks if the play button is pressed or the high score button
     def check_button(self):
