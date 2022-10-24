@@ -29,7 +29,7 @@ class GameController(object):
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
-        self.background = None
+        self.background = pygame.image.load('images/game_bg.png')
         self.titlescreen = pygame.image.load('images/bg.png')
         self.clock = pygame.time.Clock()
         self.fruit = None
@@ -90,8 +90,6 @@ class GameController(object):
         self.textgroup.showText(READYTXT)
 
     def setBackground(self):
-        self.background = pygame.surface.Surface(SCREENSIZE).convert()
-        self.background.fill(BLACK)
         self.screen.blit(self.background, (0, 0))
 
         
